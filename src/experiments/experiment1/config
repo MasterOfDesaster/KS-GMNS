@@ -1,0 +1,424 @@
+Version = "2.3.2"
+
+// Hier die Umgebung auswählen
+environment = "LOCAL"
+
+// Anzeige der Meldungen von "Utils.writeLog"
+// Meldungen mit den eingetragenen Debug-Leveln werden angezeigt
+// Normale Ausgaben:
+// 1: Anwendung, 3: UDP, 4: IP, 5: Link, 6: Anschluesse
+// Debugging:
+// 11: Anwendung, 33: UDP, 44: IP, 55: Link, 66: Anschluesse
+// Beispiel: [1,3,33]: Anwendung normal und UDP normal und debugging
+debugLevel = [1,2,3,4,5,6]
+
+// Verzögerung in Millisekunden bei der Ausgabe von Utils.writelog (zum Mitlesen auf dem Terminal)
+debugDelay = 0
+
+// TCP-Schicht
+deltaTimeOut = common.utils.Utils.sec05 // Periode fuer Sendetimeout-Countdown
+timeOut = deltaTimeOut * 5 // Timeout fuer Sendewiederholung
+
+// IP-Schicht
+// eine einheitliche Subnet-Maske fuer alle
+// Hiermit kann die Netzwerk-Id von der Host-Id getrennt werden
+globalNetMask = "255.255.255.0"
+
+// Zeitabstand in Sekunden, in dem von Routern periodisch Routinginformationen verschickt werden
+periodRInfo = 2
+
+// Auswahl einer Ablaufumgebung durch Setzen der Konstanten "environment"
+environments {
+    // ********* LOCAL ********** //
+    // Erste Teile der Versuche: schrittweiser Aufbau eines kompletten Netzwerks
+    // Lokale Arbeit, Verwendung von client1/server1 oder client2/server2
+
+    LOCAL {
+        client {
+            // IP-Adresse des Servers
+            serverIpAddr = "0.0.0.0"
+
+            // Name des Servers
+            serverName = "meinhttpserver"
+
+            // Durch HTTP-GET-Request zu ladenden Dokument
+            document = "index.html"
+
+            // TCP- und UDP-Portnummer der Serveranwendung
+            serverPort = 5100
+
+            // Eigene IPv4-Adresse
+            ownIPAddr = "0.0.0.0"
+
+            // Eigene MAC-Adresse
+            ownMacAddr = "00:00:00:00:00:00"
+
+            // Eigene TCP- und UDP-Portnummer
+            ownPort = 5200
+
+            // Standard-Router
+            //routerIpAddr = "0.0.0.0"
+
+            // IP-Adresse des Nameservers
+            //nameServerIpAddr = "0.0.0.0"
+            //nameServerPort = 0
+
+            // Festlegung der Netzwerkanschluesse
+            //      virtual: "true" - ein Anschluss in ein virtuelles LAN,
+            //               "false" - ein Anschluss an ein existierendes Ethernet-LAN
+            //      lpName: "lp1" - LinkPort: wird in der Routingtabelle zur Kennzeichnung der
+            //                          zu wählenden Übertragungsstrecke und
+            //                          in der Link-Schicht zur Auswahl des Anschlusses verwendet
+            //      link: 1 - Nummer des zu verwendenden Links (HUB oder P2P-Link) (Konstanten sind
+            //              vordefiniert in "Hub" bzw. Kindklassen)
+            //      connector: 1 - Nummer der Anschluss-Dose am HUB oder Stecker des P2P-Links,
+            //          muss ueber alle Endgeräte in einem virtuellen LAN oder an einem P2P-Link eindeutig sein
+            //      macAddr: "00:00:00:00:00:00" - die MAC-Adresse des Anschlusses
+            //      ipAddr: "0.0.0.0" - die diesem Link-Port bzw. Anschluss zugewiesene IP-Adresse
+            networkConnectors = [
+                [virtual: true,
+                 lpName: "lp1",
+                 link: experiments.experiment1.links.P2PLink1.id,
+                 connector: experiments.experiment1.links.P2PLink1.CONNECTOR_1,
+                 macAddr: ownMacAddr,
+                 ipAddr: ownIPAddr
+                ]
+            ]
+
+            // Routing-Tabelle
+            // [["Ziel-IP-Adresse", "Prefix", "Router-IP-Adresse", "Anschluss"], ...]
+            // Für Routen in das eigene IP-Subnetz ist die Router-IP-Adresse die eigene IP-Adresse:
+            // z.B.: ["192.168.1.0", "255.255.255.0", "192.168.1.10", "lp1"]
+            routingTable = [
+                           ]
+
+            // ARP-Tabelle
+            // ["IP-Adresse": "MAC-Adresse", ...]
+            arpTable = [:]
+        }
+
+        //=============================================================================================
+
+        server {
+            ownPort = 0
+            defaultRouter = "0.0.0.0"
+            nameServer = "0.0.0.0"
+
+            networkConnectors = [
+                [virtual: true,
+                 lpName: "lp1",
+                 link: experiments.experiment1.links.P2PLink1.id,
+                 connector: experiments.experiment1.links.P2PLink1.CONNECTOR_2,
+                 macAddr: "00:00:00:00:00:00",
+                 ipAddr: "0.0.0.0"
+                ]
+            ]
+
+            routingTable = [
+                           ]
+
+            arpTable = [:]
+        }
+
+        //=============================================================================================
+
+        nameserver {
+            ownPort = 5300
+            // defaultRouter = "0.0.0.0"
+
+            networkConnectors = [
+                [virtual: true,
+                 lpName: "",
+                 link: experiments.experiment1.links.Hub1.id,
+                 connector: experiments.experiment1.links.Hub1.HUB_PORT_3,
+                 macAddr: "00:00:00:00:00:00",
+                 ipAddr: "0.0.0.0"
+                ]
+            ]
+
+            routingTable = [
+                ]
+
+            arpTable = [:]
+        }
+        //=============================================================================================
+
+        router1 {
+            // Eigene TCP- und UDP-Portnummer
+            ownPort = 0
+
+            networkConnectors = [
+                [virtual: true,
+                 lpName: "lp1",
+                 link: 0,
+                 connector: 0,
+                 macAddr: "00:00:00:00:00:00",
+                 ipAddr: "0.0.0.0"
+                ],
+
+                [virtual: true,
+                 lpName: "lp2",
+                 link: 0,
+                 connector: 0,
+                 macAddr: "00:00:00:00:00:00",
+                 ipAddr: "0.0.0.0"
+                ],
+
+            ]
+
+            routingTable = [
+                    ]
+
+            arpTable = [:]
+
+            // Hier sind die IP-Adressen der benachbarten Router einzutragen
+            neighborTable = []
+        }
+        //=============================================================================================
+
+        router2 {
+            // Eigene TCP- und UDP-Portnummer
+            ownPort = 0
+
+            networkConnectors = [
+                [virtual: true,
+                 lpName: "",
+                 link: 0,
+                 connector: 0,
+                 macAddr: "00:00:00:00:00:00",
+                 ipAddr: "0.0.0.0"
+                ],
+
+                [virtual: true,
+                 lpName: "",
+                 link: 0,
+                 connector: 0,
+                 macAddr: "00:00:00:00:00:00",
+                 ipAddr: "0.0.0.0"
+                ],
+
+            ]
+
+            routingTable = [
+                    ]
+
+            arpTable = [:]
+
+            neighborTable = []
+        }
+        //=============================================================================================
+
+        router3 {
+            // Eigene TCP- und UDP-Portnummer
+            ownPort = 0
+
+            networkConnectors = [
+                [virtual: true,
+                 lpName: "",
+                 link: 0,
+                 connector: 0,
+                 macAddr: "00:00:00:00:00:00",
+                 ipAddr: "0.0.0.0"
+                ],
+
+                [virtual: true,
+                 lpName: "",
+                 link: 0,
+                 connector: 0,
+                 macAddr: "00:00:00:00:00:00",
+                 ipAddr: "0.0.0.0"
+                ],
+
+            ]
+
+            routingTable = [
+                    ]
+
+            arpTable = [:]
+
+            neighborTable = []
+        }
+        //=============================================================================================
+
+        router4 {
+            // Eigene TCP- und UDP-Portnummer
+            ownPort = 0
+
+            networkConnectors = [
+                [virtual: true,
+                 lpName: "",
+                 link: 0,
+                 connector: 0,
+                 macAddr: "00:00:00:00:00:00",
+                 ipAddr: "0.0.0.0"
+                ],
+
+                [virtual: true,
+                 lpName: "",
+                 link: 0,
+                 connector: 0,
+                 macAddr: "00:00:00:00:00:00",
+                 ipAddr: "0.0.0.0"
+                ],
+
+            ]
+
+            routingTable = [
+                    ]
+
+            arpTable = [:]
+
+            neighborTable = []
+        }
+    }
+
+    // ********* LABOR ********** //
+    // client2 und server2 im Labor
+
+    LAB {
+        client {
+          serverIpAddr = "0.0.0.0"  // IP-Adresse des Web-Servers im Labor bzw. des Web-Servers
+                                    // einer anderen Laborgruppe
+          document = "index.html"   // Durch HTTP-GET-Request zu ladenden Dokument
+
+          serverPort = 80     // Portnummer des HTTP-Dienstes
+
+          routerIpAddr = "0.0.0.0" // Adresse des Default Router im Labor
+
+          ownIpAddr = "0.0.0.0" // Eigene IPv4-Adresse
+          ownMacAddr = "00:00:00:00:00:00" // Eigene MAC-Adresse
+          ownPort = 5101 // eigene TCP-Portnummer
+
+          // Festlegung der Netzwerkanschluesse
+          networkConnectors = [
+              [
+              virtual: false,
+              lpName: "lp1",
+              // deviceName: Gerätename des Betriebssystems; ist durch ein Kommando zu bestimmen
+              deviceName: "eth0",
+              macAddr: "b8:f6:b1:18:0d:9b", // hier MAC-Adresse des realen LAN-Adapters verwenden
+              ipAddr: "141.20.244.17", // siehe Tabellen der Labor-Praktikumsanleitung
+              // Dieser Filter fuer Jpcap ist so zu setzen, das nur die erwarteten Frames empfangen werden
+              // Die Filtersyntax entspricht der des Kommandos "tcpdump"
+              recvFilter: "portrange 5000-5200 or arp" // Jpcap empfängt nur Pakete, die durch diesen Ausdruck gefiltert werden
+              ]
+          ]
+
+          // Routing-Tabelle mit eingetragener Default-Route
+          // [["Ziel-IP-Adresse", "Prefix", "Router-IP-Adresse", "Anschluss"], ...]
+          routingTable = [
+                  ["0.0.0.0", "255.255.255.0", ownIpAddr, "lp1"], // Route in das eigene LAN
+                  ["0.0.0.0", "0.0.0.0", routerIpAddr, "lp1"] // Default Route
+              ]
+
+          // ARP-Tabelle
+          arpTable = [:]
+        }
+
+        server {
+
+          routerIpAddr = "141.20.33.1" // Adresse des Default Router
+          ownPort = 5101
+
+          // Festlegung der Netzwerkanschluesse
+          networkConnectors = [
+              [
+              virtual: false,
+              lpName: "lp1",
+              // deviceName: Gerätename im Betriebssystem
+              deviceName: "en4",
+              macAddr: "40:6c:8f:11:9e:38",
+              ipAddr: "141.20.33.23",
+              recvFilter: "portrange 5000-5200 or arp"
+              ]
+          ]
+
+          // Routing-Tabelle mit eingetragener Default-Route
+          // [["Ziel-IP-Adresse", "Prefix", "Router-IP-Adresse", "Anschluss"], ...]
+          routingTable = [
+                  ["0.0.0.0", "0.0.0.0", routerIpAddr, "lp1"]
+              ]
+
+          // ARP-Tabelle
+          arpTable = [:]
+        }
+    }
+
+    // ********* Eigene Umgebung ********** //
+    // client2 selbsständig an externen Web-Server
+
+    HOME {
+        client {
+            serverIpAddr = "141.20.5.188" // IP-Adresse des Web-Servers des Instituts
+            document = "index.html"   // Durch HTTP-GET-Request zu ladenden Dokument
+            serverPort = 80     // Portnummer des HTTP-Dienstes
+            routerIpAddr = "141.20.33.1" // Adresse des Default Router
+            ownPort = 5101
+
+
+            // Festlegung der Netzwerkanschluesse
+            networkConnectors = [
+                [
+                virtual: false,
+                lpName: "lp1",
+                // deviceName: Gerätename des Betriebssystems, hier: Mac OS X, Ethernet-Adapter
+                deviceName: "en4",
+                macAddr: "40:6c:8f:11:9e:38",
+                ipAddr: "141.20.33.23",
+                // Dieser Filter fuer Jpcap ist so zu setzen, das nur die erwarteten Frames empfangen werden
+                // Die Filtersyntax entspricht der des Kommandos "tcpdump"
+                recvFilter: "portrange 5000-5200 or arp" // Jpcap empfängt nur Pakete, die durch diesen Ausdruck gefiltert werden
+                ]
+            ]
+
+            // Initiale Routing-Tabelle
+            // [["Ziel-IP-Adresse", "Prefix", "Router-IP-Adresse", "Anschluss"], ...]
+            routingTable = [
+                    ["0.0.0.0", "0.0.0.0", routerIpAddr, "lp1"]
+                ]
+
+            // Map<IP-Adresse, MAC-Adresse>
+            arpTable = [:]
+       }
+    }
+
+    // ********* EDUROAM ********** //
+    // client2 selbsständig an externen Web-Server
+
+    EDUROAM {
+        client {
+          // serverIpAddr = "173.194.113.191" // www.google.de
+          serverIpAddr = "141.20.5.188" // IP-Adresse des Web-Servers des Instituts
+          serverPort = 80     // Portnummer des HTTP-Dienstes
+          document = "index.html"   // Durch HTTP-GET-Request zu ladenden Dokument
+
+          routerIpAddr = "141.20.191.1" // Adresse des Default Router
+
+          ownPort = 5101
+
+          // Festlegung der Netzwerkanschluesse
+          networkConnectors = [
+              [
+              virtual: false,
+              lpName: "lp1",
+              // deviceName: Gerätename des Betriebssystems, hier: Mac OS X, WLAN-Adapter
+              deviceName: "en0",
+              macAddr: "b8:f6:b1:18:0d:9b",
+              ipAddr: "141.20.191.150",
+              // Dieser Filter fuer Jpcap ist so zu setzen, das nur die erwarteten Frames empfangen werden
+              // Die Filtersyntax entspricht der des Kommandos "tcpdump"
+              recvFilter: "portrange 5000-5200 or arp" // Jpcap empfängt nur Pakete, die durch diesen Ausdruck gefiltert werden
+              ]
+          ]
+
+          // Initiale Routing-Tabelle
+          // [["Ziel-IP-Adresse", "Prefix", "Router-IP-Adresse", "Anschluss"], ...]
+          routingTable = [
+                  ["0.0.0.0", "0.0.0.0", routerIpAddr, "lp1"]
+              ]
+
+          // Map<IP-Adresse, MAC-Adresse>
+          arpTable = [:]
+        }
+    }
+}
