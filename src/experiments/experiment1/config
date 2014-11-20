@@ -42,7 +42,7 @@ environments {
             serverName = "meinhttpserver"
 
             // Durch HTTP-GET-Request zu ladenden Dokument
-            document = "index.html"
+            document = "daten"
 
             // TCP- und UDP-Portnummer der Serveranwendung
             serverPort = 5100
@@ -54,7 +54,7 @@ environments {
             ownMacAddr = "00:00:00:00:00:00"
 
             // Eigene TCP- und UDP-Portnummer
-            ownPort = 5200
+            ownPort = 5199
 
             // Standard-Router
             //routerIpAddr = "0.0.0.0"
