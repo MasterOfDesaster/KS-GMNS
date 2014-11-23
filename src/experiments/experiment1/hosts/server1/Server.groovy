@@ -100,6 +100,7 @@ Das Objekt ${->name} wurde angefragt!
         stack = new Stack()
         stack.start(config)
         ownPort = config.ownPort
+        String[] replyData = new String()
 
         //------------------------------------------------
 
@@ -143,17 +144,28 @@ Das Objekt ${->name} wurde angefragt!
                     case "daten":
                         // hier langen HTTP-body (einige kByte) erzeugen um lang anhaltende Übertragung
                         // zu erreichen
-                        data = "....."
+                        data = "Das hier sind die Daten die gesendet werden"
 
                         dataLength = data.size()
-                        reply = reply1 + data // dabei wird dataLength in reply1 eingetragen
+                        //reply = reply1 + data // dabei wird dataLength in reply1 eingetrage
+                        replyData = data.split("(?<=\\G.{4})")
                         break
                 }
                 Utils.writeLog("Server", "server", "sendet: $reply", 11)
 
                 // Antwort senden
-                stack.udpSend(dstIpAddr: srcIpAddr, dstPort: srcPort,
-                        srcPort: ownPort, sdu: reply)
+                switch(name) {
+                    case "index.html":
+                        stack.udpSend(dstIpAddr: srcIpAddr, dstPort: srcPort,
+                                srcPort: ownPort, sdu: reply)
+
+                     case "daten":
+                         for(int i = 0; i <= replyData.length; i++){
+                             stack.udpSend(dstIpAddr: srcIpAddr, dstPort: srcPort,
+                                     srcPort: ownPort, sdu: replyData[i])}
+                }
+
+
             }
         } // while
     }

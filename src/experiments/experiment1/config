@@ -45,7 +45,7 @@ environments {
             document = "daten"
 
             // TCP- und UDP-Portnummer der Serveranwendung
-            serverPort = 5100
+            serverPort = 5199
 
             // Eigene IPv4-Adresse
             ownIPAddr = "0.0.0.0"
