@@ -14,6 +14,9 @@ class NameServer {
     /** Der Netzwerk-Protokoll-Stack */
     experiments.experiment1.stack.Stack stack
 
+    String data
+    String IPAdr
+
     /** Konfigurations-Objekt */
     ConfigObject config
 
@@ -22,7 +25,7 @@ class NameServer {
 
     /** Tabelle zur Umsetzung von Namen in IP-Adressen */
     Map<String, String> nameTable = [
-            "meinhttpserver": "0.0.0.0",
+            "meinhttpserver": "192.168.1.10",
             "alice": "0.0.0.0",
             "bob": "0.0.0.0",
     ]
@@ -66,6 +69,10 @@ class NameServer {
             // auf Empfang ueber UDP warten
             // Namen über nameTable in IP-Adresse aufloesen
             // IP-Adresse ueber UDP zuruecksenden
+            (data) = stack.udpReceive()
+            Utils.writeLog("Nameserver", "nameserver", "empfängt: $data", 1)
+            IPAdr = nameTable.get(data)
+            stack.udpSend(sdu: IPAdr)
         }
     }
     //------------------------------------------------------------------------------

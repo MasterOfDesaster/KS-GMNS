@@ -78,7 +78,7 @@ environments {
             networkConnectors = [
                 [virtual: true,
                  lpName: "lp1",
-                 link: experiments.experiment1.links.P2PLink1.id,
+                 link: experiments.experiment1.links.Hub1.id,
                  connector: experiments.experiment1.links.Hub1.HUB_PORT_3,
                  macAddr: ownMacAddr,
                  ipAddr: ownIPAddr
@@ -107,7 +107,7 @@ environments {
             networkConnectors = [
                 [virtual: true,
                  lpName: "lp1",
-                 link: experiments.experiment1.links.P2PLink1.id,
+                 link: experiments.experiment1.links.Hub1.id,
                  connector: experiments.experiment1.links.Hub1.HUB_PORT_3,
                  macAddr: "01:01:01:03:03:03",
                  ipAddr: "192.168.2.10"
