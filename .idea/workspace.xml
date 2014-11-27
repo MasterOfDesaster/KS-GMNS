@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="961e57af-ce56-45fb-b0d5-2c8a7552031a" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/experiments/experiment1/hosts/nameserver/NameServer.groovy" afterPath="$PROJECT_DIR$/src/experiments/experiment1/hosts/nameserver/NameServer.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/experiments/experiment1/config" afterPath="$PROJECT_DIR$/src/experiments/experiment1/config" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="KS_Praktikum.iws" />
@@ -62,7 +60,7 @@
       <file leaf-file-name="config" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/config">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.66815144" vertical-offset="270" max-vertical-offset="6450">
+            <state vertical-scroll-proportion="-0.7349666" vertical-offset="900" max-vertical-offset="6450">
               <caret line="38" column="29" selection-start-line="38" selection-start-column="29" selection-end-line="38" selection-end-column="29" />
               <folding />
             </state>
@@ -447,7 +445,13 @@
       <option name="project" value="LOCAL" />
       <updated>1417085651812</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="Name Server und Config Update">
+      <created>1417089162062</created>
+      <option name="number" value="00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1417089162062</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -523,7 +527,8 @@
     </option>
     <MESSAGE value="Server splittet Datenstring in Substrings der Größe 4 und sendet diese Pakete einzeln" />
     <MESSAGE value="Config Datei mit IP-Adressen u.ä. aktualisiert" />
-    <option name="LAST_COMMIT_MESSAGE" value="Config Datei mit IP-Adressen u.ä. aktualisiert" />
+    <MESSAGE value="Name Server und Config Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Name Server und Config Update" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -768,7 +773,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/config">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.66815144" vertical-offset="270" max-vertical-offset="6450">
+        <state vertical-scroll-proportion="-0.7349666" vertical-offset="900" max-vertical-offset="6450">
           <caret line="38" column="29" selection-start-line="38" selection-start-column="29" selection-end-line="38" selection-end-column="29" />
           <folding />
         </state>
