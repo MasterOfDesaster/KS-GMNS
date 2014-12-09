@@ -30,6 +30,13 @@ class NameServer {
             "bob": "0.0.0.0",
     ]
 
+    /**eigene Portnummer*/
+    int ownPort
+
+    /**Clientdaten*/
+    String srcIpAddr
+    int srcPort
+
     //========================================================================================================
     // Methoden ANFANG
     //========================================================================================================
@@ -61,6 +68,7 @@ class NameServer {
         // Netzwerkstack initialisieren
         stack = new experiments.experiment1.stack.Stack()
         stack.start(config)
+        ownPort = config.ownPort
 
         Utils.writeLog("NameServer", "nameserver", "startet", 1)
 
@@ -69,10 +77,13 @@ class NameServer {
             // auf Empfang ueber UDP warten
             // Namen über nameTable in IP-Adresse aufloesen
             // IP-Adresse ueber UDP zuruecksenden
-            (data) = stack.udpReceive()
+            (srcIpAddr, srcPort, data) = stack.udpReceive()
             Utils.writeLog("Nameserver", "nameserver", "empfängt: $data", 1)
             IPAdr = nameTable.get(data)
-            stack.udpSend(sdu: IPAdr)
+            stack.udpSend(dstIpAddr: srcIpAddr, dstPort: srcPort,
+                    srcPort: ownPort, sdu: IPAdr)
+
+            Utils.writeLog("Nameserver", "nameserver", "sendet: $IPAdr", 1)
         }
     }
     //------------------------------------------------------------------------------

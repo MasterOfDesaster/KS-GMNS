@@ -38,6 +38,11 @@ class Client {
     /** Zielportadresse */
     int serverPort
 
+    /** nameserverport und -adresse */
+    int nameServerPort
+    String nameServerIpAddr
+    String serverName
+
     /** HTTP-Header fuer GET-Request **/
     String request =
             """\
@@ -109,11 +114,18 @@ Host: www.sesam-strasse.com
         // ------------------------------------------------------------
 
         // IPv4-Adresse und Portnummer des HTTP-Dienstes
-        serverIpAddr = config.serverIpAddr
+        serverIpAddr = ""
         serverPort = config.serverPort
+
+        // Name des Servers
+        serverName = config.serverName
 
         // Eigener UDP-Port
         ownPort = config.ownPort
+
+        //Nameserveradresse initialisieren
+        nameServerPort = config.nameServerPort
+        nameServerIpAddr = config.nameServerIpAddr
 
         // Netzwerkstack initialisieren
         stack = new Stack()
@@ -124,6 +136,20 @@ Host: www.sesam-strasse.com
         Utils.writeLog("Client", "client", "startet", 1)
 
         // ------------------------------------------------------------
+
+        Utils.writeLog("Client", "client", "fragt an: ${serverIpAddr}", 1)
+        stack.udpSend(dstIpAddr: nameServerIpAddr, dstPort: nameServerPort,
+                srcPort: ownPort, sdu: serverName)
+
+        while(serverIpAddr = "")
+        {
+            // Auf Empfang warten
+            String d1, d2
+            // dummies
+            (d1, d2, serverIpAddr) = stack.udpReceive()
+
+            Utils.writeLog("Client", "client", "empfängt: $serverIpAddr", 1)
+        }
 
 
         Utils.writeLog("Client", "client", "sendet: ${request}", 1)
