@@ -33,7 +33,7 @@ class Client {
     //------------------------------------------------------------------------------
 
     /** Ziel-IP-Adresse */
-    String serverIpAddr
+    String serverIpAddr = config.serverIpAddr
 
     /** Zielportadresse */
     int serverPort
@@ -137,20 +137,16 @@ Host: www.sesam-strasse.com
 
         // ------------------------------------------------------------
 
-        Utils.writeLog("Client", "client", "fragt an: ${serverIpAddr}", 1)
+        Utils.writeLog("Client", "client", "fragt Nameserver an: ${serverIpAddr}", 1)
         stack.udpSend(dstIpAddr: nameServerIpAddr, dstPort: nameServerPort,
                 srcPort: ownPort, sdu: serverName)
 
-        while(serverIpAddr = "")
-        {
             // Auf Empfang warten
             String d1, d2
             // dummies
             (d1, d2, serverIpAddr) = stack.udpReceive()
 
             Utils.writeLog("Client", "client", "empfängt: $serverIpAddr", 1)
-        }
-
 
         Utils.writeLog("Client", "client", "sendet: ${request}", 1)
 
@@ -166,7 +162,7 @@ Host: www.sesam-strasse.com
         while (curBodyLength < bodyLength) {
 
             // Auf Empfang warten
-            String d1, d2
+            //String d1, d2
             // dummies
             (d1, d2, rdata) = stack.udpReceive()
 

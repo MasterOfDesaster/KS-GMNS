@@ -45,7 +45,7 @@ environments {
             document = "daten"
 
             // TCP- und UDP-Portnummer der Serveranwendung
-            serverPort = 5199
+            serverPort = 5300
 
             // Eigene IPv4-Adresse
             ownIPAddr = "192.168.1.9"
@@ -54,14 +54,14 @@ environments {
             ownMacAddr = "01:01:01:01:01:01"
 
             // Eigene TCP- und UDP-Portnummer
-            ownPort = 5199
+            ownPort = 5299
 
             // Standard-Router
             //routerIpAddr = "0.0.0.0"
 
             // IP-Adresse des Nameservers
             nameServerIpAddr = "192.168.1.11"
-            nameServerPort = 5300
+            nameServerPort = 5199
 
             // Festlegung der Netzwerkanschluesse
             //      virtual: "true" - ein Anschluss in ein virtuelles LAN,
@@ -94,13 +94,13 @@ environments {
 
             // ARP-Tabelle
             // ["IP-Adresse": "MAC-Adresse", ...]
-            arpTable = [:]
+            arpTable = ["192.168.1.10" : "01:01:01:03:03:03", "192.168.1.10" : "01:01:01:02:02:02"]
         }
 
         //=============================================================================================
 
         server {
-            ownPort = 5199
+            ownPort = 5300
             defaultRouter = "0.0.0.0"
             nameServer = "192.168.1.11"
             ownIPAddr = "192.168.1.10"
@@ -125,7 +125,7 @@ environments {
         //=============================================================================================
 
         nameserver {
-            ownPort = 5300
+            ownPort = 5199
             defaultRouter = "0.0.0.0"
             ownIPAddr = "192.168.1.11"
             ownMacAddr = "01:01:01:02:02:02"
