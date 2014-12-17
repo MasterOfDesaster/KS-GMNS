@@ -71,6 +71,9 @@ class LinkLayer {
     /** Eigene IP-Adressen (eine IP-Adresse je Anschluss) */
     Map<String, String> ownIpAddrs = [:]
 
+    /** Eigene Mac-Adressen (eine Mac-Adresse je Anschluss) */
+    Map<String, String> ownMacAddrs = [:]
+
     //========================================================================================================
     // Methoden ANFANG
     //========================================================================================================
@@ -231,13 +234,13 @@ class LinkLayer {
             // entweder:
 
             // für alle Ziele gleiche MAC-Adresse eintragen
-            macFrame.dstMacAddr = "00:00:00:00:00:00"
+//            macFrame.dstMacAddr = "00:00:00:00:00:00"
 
             // oder besser:
 
             // Entnahme der MAC-Adresse eines Ziels im LAN aus einer Tabelle
             // aufgrund der IP-Adresse des Ziels; die Tabelle wird manuell verwaltet
-//            macFrame.dstMacAddr = arpTable[il_idu.nextHopAddr]
+            macFrame.dstMacAddr = arpTable[il_idu.nextHopAddr]
 
             // oder besser:
 
@@ -282,7 +285,7 @@ class LinkLayer {
 //                arpTable[???] = ???
 //
 //                // MAC-Ziel-Adresse in MAC-Frame einsetzen
-//                macFrame.dstMacAddr = nextMacAddr
+//              macFrame.dstMacAddr = nextMacAddr
 //            }
 
             macFrame.sdu = il_idu.sdu // PDU entnehmen
@@ -333,6 +336,7 @@ class LinkLayer {
         // Tabelle der IP-Adressen erzeugen
         config.networkConnectors.each { conn ->
             ownIpAddrs[conn.lpName] = conn.ipAddr
+            ownMacAddrs[conn.lpName] = conn.macAddr
         }
 
         /** Start der Threads */
