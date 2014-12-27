@@ -240,13 +240,13 @@ class LinkLayer {
 
             // Entnahme der MAC-Adresse eines Ziels im LAN aus einer Tabelle
             // aufgrund der IP-Adresse des Ziels; die Tabelle wird manuell verwaltet
-            macFrame.dstMacAddr = arpTable[il_idu.nextHopAddr]
+//            macFrame.dstMacAddr = arpTable[il_idu.nextHopAddr]
 
             // oder besser:
 
-//            // Die MAC-Adresse des Ziel wird aus einer Tabelle entnommen deren Inhalt per ARP
-//            // (Address Resolution Protocol) dynamisch bestimmt wird.
-//            // Wird kein Eintrag gefunden -> null (siehe "?."-Operator)
+            // Die MAC-Adresse des Ziel wird aus einer Tabelle entnommen deren Inhalt per ARP
+            // (Address Resolution Protocol) dynamisch bestimmt wird.
+            // Wird kein Eintrag gefunden -> null (siehe "?."-Operator)
 macFrame?.dstMacAddr = arpTable[il_idu.nextHopAddr]
 
 // Wurde die MAC-Adresse fuer das naechste Ziel in der ARP-Tabelle gefunden?
@@ -282,7 +282,7 @@ connector.send(lc_idu)
 String nextMacAddr = arpQ.take()
 
 // Arp-Tabelle aktualisieren
-arpTable[macFrame.dstMacAddr] = nextMacAddr
+arpTable[waitDstIpAddr] = nextMacAddr
 
 // MAC-Ziel-Adresse in MAC-Frame einsetzen
 macFrame.dstMacAddr = nextMacAddr
