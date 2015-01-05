@@ -75,11 +75,11 @@ class NameServer {
         while (run) {
             // Hier Protokoll implementieren:
             // auf Empfang ueber UDP warten
-            // Namen über nameTable in IP-Adresse aufloesen
-            // IP-Adresse ueber UDP zuruecksenden
             (srcIpAddr, srcPort, data) = stack.udpReceive()
             Utils.writeLog("Nameserver", "nameserver", "empfängt: $data", 1)
+            // Namen über nameTable in IP-Adresse aufloesen
             IPAdr = nameTable.get(data)
+            // IP-Adresse ueber UDP zuruecksenden
             stack.udpSend(dstIpAddr: srcIpAddr, dstPort: srcPort,
                     srcPort: ownPort, sdu: IPAdr)
 
