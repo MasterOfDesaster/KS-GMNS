@@ -99,6 +99,7 @@ class Router1 {
         // Auf UDP-Empfang warten
         (iPAddr, port, rInfo) = stack.udpReceive()
 
+        //TODO:
         // Jetzt aktuelle Routingtablle holen:
         // rt = stack.getRoutingtable()
         // neue Routinginformationen bestimmen
@@ -116,6 +117,7 @@ class Router1 {
 
     /** Periodisches Senden der Routinginformationen */
     void sendPeriodical() {
+        //TODO:
         // Paket mit Routinginformationen packen
         // ... z.B.
         // routingTable = stack.getRoutingTable()
