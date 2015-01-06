@@ -117,7 +117,7 @@ class LinkLayer {
             // oder besser:
 
             // Ist es eine eigene MAC-Adresse oder ein MAC-Broadcast ?
-            if (macFrame.dstMacAddr == ownMacAddrs ||
+            if (macFrame.dstMacAddr == ownMacAddrs[li_idu.lpName] ||
                     macFrame.dstMacAddr == broadcastMacAddress) {
                 // Ja
                 // Frame-Typ untersuchen
@@ -141,11 +141,11 @@ class LinkLayer {
                         switch (ar_pdu.operation) {
                             case ARP_REPLY:
                                 // Warten auf ARP-Reply von abgefragtem Geraet
-                                if (waitARP && waitDstIpAddr == ar_pdu.senderProtoAddr) {
+                                if (waitARP && waitDstIpAddr == ???){
                                     waitARP = false
 
                                     // Gesuchte MAC-Adresse uebernehmen
-                                    String macAddr = ownMacAddrs[li_idu.lpname]
+                                    String macAddr = ???
 
                                     Utils.writeLog("LinkLayer", "receive", "empfaengt ARP-Reply von ${ar_pdu.senderProtoAddr}: ${macAddr}", 5)
 
@@ -156,18 +156,18 @@ class LinkLayer {
 
                             case ARP_REQUEST:
                                 // Wird eigene MAC-Adresse abgefragt?
-                                if (ar_pdu.targetProtoAddr == ownIpAddrs[li_idu.lpName]) {
+                                if (ar_pdu.targetProtoAddr == ???) {
                                     // Ja
                                     // ARP-Reply senden
 
                                     Utils.writeLog("LinkLayer", "receive", "empfaengt ARP-Request und sendet Reply", 5)
 
                                     ar_pdu.operation = ARP_REPLY
-                                    ar_pdu.targetProtoAddr = ??? // IP-Adresse des Ziels
-                                    ar_pdu.targetHardAddr = ??? // MAC-Zieladresse des Ziels
+                                    ar_pdu.targetProtoAddr = ar_pdu.senderProtoAddr // IP-Adresse des Ziels
+                                    ar_pdu.targetHardAddr = ar_pdu.senderHardAddr  // MAC-Zieladresse des Ziels
 
                                     Connector connector = connectors[cl_idu.lpName]
-                                    ar_pdu.senderProtoAddr = ownIpAddrs[li_idu.lpName] // Eigene IP-Adresse
+                                    ar_pdu.senderProtoAddr = ??? // Eigene IP-Adresse
                                     ar_pdu.senderHardAddr = connector.getMacAddr() // Eigene MAC-Adresse
 
                                     macFrame.dstMacAddr = ar_pdu.targetHardAddr // MAC-Zieladresse
@@ -259,7 +259,7 @@ class LinkLayer {
 
                 // ARP_PDU erzeugen
                 AR_PDU ar_pdu = new AR_PDU()
-                ar_pdu.operation = 1
+                ar_pdu.operation = ARP_REQUEST
                 ar_pdu.senderProtoAddr =  ownIpAddrs[lpName]// IP-Adresse des Senders
                 ar_pdu.senderHardAddr = connector.macAddr // MAC-Adresse des Senders
 
