@@ -186,8 +186,8 @@ class IpLayer {
             Utils.writeLog("IpLayer", "send", "uebernimmt von TCP/UDP: ${ti_idu}", 4)
 
             linkPortName = "lp1"
-            nextHopAddr = ownIpAddrs[linkPortName]
-
+            //nextHopAddr = ownIpAddrs[linkPortName]
+            nextHopAddr = ti_idu.dstIpAddr
 //            // Nächstes Gerät (next hop) auf dem Pfad zum Zielgerät suchen
 //            (linkPortName, nextHopAddr) = findNextHop(ti_idu.dstIpAddr)
 

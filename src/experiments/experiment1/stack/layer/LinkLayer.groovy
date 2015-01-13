@@ -117,16 +117,12 @@ class LinkLayer {
             // oder besser:
 
             // Ist es eine eigene MAC-Adresse oder ein MAC-Broadcast ?
-            System.out.println("srcMacAddr: "+ownMacAddrs[cl_idu.lpName])
-            System.out.println("dstmacAddr: "+macFrame.dstMacAddr)
             if (macFrame.dstMacAddr == ownMacAddrs[cl_idu.lpName] ||
                     macFrame.dstMacAddr == broadcastMacAddress) {
-                System.out.println("erste If Schleife") //Zu Testzwecken
                 // Ja
                 // Frame-Typ untersuchen
                 switch (macFrame.type) {
                     case ETHERTYPE_IP:
-                        System.out.println("Ethertype_IP") //Zu testzwecken
                         // IP-PDU behandeln:
 
                         // IDU erzeugen
@@ -139,16 +135,13 @@ class LinkLayer {
                         break
 
                     case ETHERTYPE_ARP:
-                        System.out.println("Ethertype_ARP") //Zu Testzwecken
                         // ARP-PDU behandeln:
                         AR_PDU ar_pdu = macFrame.sdu as AR_PDU
 
                         switch (ar_pdu.operation) {
                             case ARP_REPLY:
-                                System.out.println("ARP_REPLY") //Zu Testzwecken
                                 // Warten auf ARP-Reply von abgefragtem Geraet
                                 if (waitARP && waitDstIpAddr == ar_pdu.senderProtoAddr){
-                                    System.out.println("ARP_REPLY If Schleife") //Zu Testzwecken
                                     waitARP = false
 
                                     // Gesuchte MAC-Adresse uebernehmen
@@ -162,12 +155,8 @@ class LinkLayer {
                                 break
 
                             case ARP_REQUEST:
-                                System.out.println("ARP REQUEST") //Zu Testzwecken
-                                System.out.println("ar_pdu.targetProtoAddr: " + ar_pdu.targetProtoAddr)
-                                System.out.println("ownIpAddrs[cl_idu.lpName]: " + ownIpAddrs[cl_idu.lpName])
                                 // Wird eigene MAC-Adresse abgefragt?
                                 if (ar_pdu.targetProtoAddr == ownIpAddrs[cl_idu.lpName]) {
-                                    System.out.println("ARP REQUEST If Schleife") //Zu Testzwecken
                                     // Ja
                                     // ARP-Reply senden
 
