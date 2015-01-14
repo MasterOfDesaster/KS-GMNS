@@ -48,7 +48,7 @@ environments {
             serverPort = 5300
 
             // Eigene IPv4-Adresse
-            ownIPAddr = "192.168.1.9"
+            ownIPAddr = "192.168.1.10"
 
             // Eigene MAC-Adresse
             ownMacAddr = "01:01:01:01:01:01"
@@ -57,7 +57,7 @@ environments {
             ownPort = 5299
 
             // Standard-Router
-            //routerIpAddr = "0.0.0.0"
+            //routerIpAddr = "192.168.1.1"
 
             // IP-Adresse des Nameservers
             nameServerIpAddr = "192.168.1.11"
@@ -89,7 +89,8 @@ environments {
             // [["Ziel-IP-Adresse", "Prefix", "Router-IP-Adresse", "Anschluss"], ...]
             // Für Routen in das eigene IP-Subnetz ist die Router-IP-Adresse die eigene IP-Adresse:
             // z.B.: ["192.168.1.0", "255.255.255.0", "192.168.1.10", "lp1"]
-            routingTable = [
+            routingTable = ["192.168.1.11", "255.255.255.0", "192.168.1.10", "lp1",
+                            "192.168.1.1", "255.255.255.0", "192.168.1.10", "lp1"
                            ]
 
             // ARP-Tabelle
@@ -101,10 +102,34 @@ environments {
 
         server {
             ownPort = 5300
-            defaultRouter = "0.0.0.0"
+            defaultRouter = "192.168.2.1"
             nameServer = "192.168.1.11"
-            ownIPAddr = "192.168.1.10"
+            ownIPAddr = "192.168.2.10"
             ownMacAddr = "01:01:01:03:03:03"
+
+            networkConnectors = [
+                [virtual: true,
+                 lpName: "lp1",
+                 link: experiments.experiment1.links.Hub2.id,
+                 connector: experiments.experiment1.links.Hub2.HUB_PORT_1,
+                 macAddr: ownMacAddr,
+                 ipAddr: ownIPAddr
+                ]
+            ]
+
+            routingTable = ["192.168.2.1", "255.255.255.0", "192.168.2.10", "lp2"
+                           ]
+
+            arpTable = [:]
+        }
+
+        //=============================================================================================
+
+        nameserver {
+            ownPort = 5199
+            defaultRouter = "192.168.1.1"
+            ownIPAddr = "192.168.1.11"
+            ownMacAddr = "01:01:01:02:02:02"
 
             networkConnectors = [
                 [virtual: true,
@@ -116,32 +141,9 @@ environments {
                 ]
             ]
 
-            routingTable = [
+            routingTable = ["192.168.1.10", "255.255.255.0", "192.168.1.11", "lp1",
+                            "192.168.1.1", "255.255.255.0", "192.168.1.11", "lp1"
                            ]
-
-            arpTable = [:]
-        }
-
-        //=============================================================================================
-
-        nameserver {
-            ownPort = 5199
-            defaultRouter = "0.0.0.0"
-            ownIPAddr = "192.168.1.11"
-            ownMacAddr = "01:01:01:02:02:02"
-
-            networkConnectors = [
-                [virtual: true,
-                 lpName: "lp1",
-                 link: experiments.experiment1.links.Hub1.id,
-                 connector: experiments.experiment1.links.Hub1.HUB_PORT_3,
-                 macAddr: ownMacAddr,
-                 ipAddr: ownIPAddr
-                ]
-            ]
-
-            routingTable = [
-                ]
 
             arpTable = [:]
         }
@@ -154,24 +156,26 @@ environments {
             networkConnectors = [
                 [virtual: true,
                  lpName: "lp1",
-                 link: 0,
-                 connector: 0,
-                 macAddr: "00:00:00:00:00:00",
-                 ipAddr: "0.0.0.0"
+                 link: experiments.experiment1.links.Hub1.id,
+                 connector: experiments.experiment1.links.Hub1.HUB_PORT_3,
+                 macAddr: "01:01:01:04:04:04",
+                 ipAddr: "192.168.1.1"
                 ],
 
                 [virtual: true,
                  lpName: "lp2",
-                 link: 0,
-                 connector: 0,
-                 macAddr: "00:00:00:00:00:00",
-                 ipAddr: "0.0.0.0"
+                 link: experiments.experiment1.links.Hub2.id,
+                 connector: experiments.experiment1.links.Hub2.HUB_PORT_2,
+                 macAddr: "01:01:01:04:04:04",
+                 ipAddr: "192.168.2.1"
                 ],
 
             ]
 
-            routingTable = [
-                    ]
+            routingTable = ["192.168.1.10", "255.255.255.0", "192.168.1.1", "lp1",
+                            "192.168.1.11", "255.255.255.0", "192.168.1.1", "lp1",
+                            "192.168.2.10", "255.255.255.0", "192.168.2.1", "lp2"
+                           ]
 
             arpTable = [:]
 
