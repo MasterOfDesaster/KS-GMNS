@@ -54,7 +54,7 @@ environments {
             ownMacAddr = "01:01:01:01:01:01"
 
             // Eigene TCP- und UDP-Portnummer
-            ownPort = 5299
+            ownPort = 5100
 
             // Standard-Router
             //routerIpAddr = "192.168.1.1"
@@ -89,8 +89,10 @@ environments {
             // [["Ziel-IP-Adresse", "Prefix", "Router-IP-Adresse", "Anschluss"], ...]
             // Für Routen in das eigene IP-Subnetz ist die Router-IP-Adresse die eigene IP-Adresse:
             // z.B.: ["192.168.1.0", "255.255.255.0", "192.168.1.10", "lp1"]
-            routingTable = ["192.168.1.11", "255.255.255.0", "192.168.1.10", "lp1",
-                            "192.168.1.1", "255.255.255.0", "192.168.1.10", "lp1"
+            routingTable = [
+                            ["192.168.1.11", "255.255.255.0", "192.168.1.10", "lp1"],
+                            ["192.168.1.1", "255.255.255.0", "192.168.1.10", "lp1"],
+                            ["192.168.2.10", "255.255.255.0", "192.168.2.1", "lp1"]
                            ]
 
             // ARP-Tabelle
@@ -101,7 +103,7 @@ environments {
         //=============================================================================================
 
         server {
-            ownPort = 5300
+            ownPort = 5150
             defaultRouter = "192.168.2.1"
             nameServer = "192.168.1.11"
             ownIPAddr = "192.168.2.10"
@@ -117,7 +119,10 @@ environments {
                 ]
             ]
 
-            routingTable = ["192.168.2.1", "255.255.255.0", "192.168.2.10", "lp2"
+            routingTable = [
+                            ["192.168.2.1", "255.255.255.0", "192.168.2.10", "lp1"],
+                            ["192.168.1.10","255.255.255.0","192.168..1.1","lp1"],
+                            ["192.168.1.11","255.255.255.0","192.168.1.1","lp1"]
                            ]
 
             arpTable = [:]
@@ -126,7 +131,7 @@ environments {
         //=============================================================================================
 
         nameserver {
-            ownPort = 5199
+            ownPort = 5200
             defaultRouter = "192.168.1.1"
             ownIPAddr = "192.168.1.11"
             ownMacAddr = "01:01:01:02:02:02"
@@ -141,8 +146,10 @@ environments {
                 ]
             ]
 
-            routingTable = ["192.168.1.10", "255.255.255.0", "192.168.1.11", "lp1",
-                            "192.168.1.1", "255.255.255.0", "192.168.1.11", "lp1"
+            routingTable = [
+                            ["192.168.1.10", "255.255.255.0", "192.168.1.11", "lp1"],
+                            ["192.168.1.1", "255.255.255.0", "192.168.1.11", "lp1"],
+                            ["192.168.2.10", "255.255.255.0", "192.168.2.1", "lp1"]
                            ]
 
             arpTable = [:]
@@ -151,7 +158,7 @@ environments {
 
         router1 {
             // Eigene TCP- und UDP-Portnummer
-            ownPort = 0
+            ownPort = 5250
 
             networkConnectors = [
                 [virtual: true,
@@ -163,7 +170,7 @@ environments {
                 ],
 
                 [virtual: true,
-                 lpName: "lp2",
+                 lpName: "lp1",
                  link: experiments.experiment1.links.Hub2.id,
                  connector: experiments.experiment1.links.Hub2.HUB_PORT_2,
                  macAddr: "01:01:01:04:04:04",
@@ -172,9 +179,10 @@ environments {
 
             ]
 
-            routingTable = ["192.168.1.10", "255.255.255.0", "192.168.1.1", "lp1",
-                            "192.168.1.11", "255.255.255.0", "192.168.1.1", "lp1",
-                            "192.168.2.10", "255.255.255.0", "192.168.2.1", "lp2"
+            routingTable = [
+                            ["192.168.1.10", "255.255.255.0", "192.168.1.1", "lp1"],
+                            ["192.168.1.11", "255.255.255.0", "192.168.1.1", "lp1"],
+                            ["192.168.2.10", "255.255.255.0", "192.168.2.1", "lp1"]
                            ]
 
             arpTable = [:]
