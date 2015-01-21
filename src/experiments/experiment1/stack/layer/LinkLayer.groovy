@@ -123,6 +123,7 @@ class LinkLayer {
                 // Frame-Typ untersuchen
                 switch (macFrame.type) {
                     case ETHERTYPE_IP:
+                        System.out.println("ETHERTYPE_IP")
                         // IP-PDU behandeln:
 
                         // IDU erzeugen
@@ -135,14 +136,17 @@ class LinkLayer {
                         break
 
                     case ETHERTYPE_ARP:
+                        System.out.println("ETHERTYPE_ARP")
                         // ARP-PDU behandeln:
                         AR_PDU ar_pdu = macFrame.sdu as AR_PDU
 
                         switch (ar_pdu.operation) {
                             case ARP_REPLY:
+                                System.out.println("ARP_REPLY")
                                 // Warten auf ARP-Reply von abgefragtem Geraet
                                 if (waitARP && waitDstIpAddr == ar_pdu.senderProtoAddr){
                                     waitARP = false
+                                    System.out.println("ARP_REPLY If schleife")
 
                                     // Gesuchte MAC-Adresse uebernehmen
                                     String macAddr = ar_pdu.senderHardAddr
@@ -155,11 +159,12 @@ class LinkLayer {
                                 break
 
                             case ARP_REQUEST:
+                                System.out.println("ARP_REQUEST")
                                 // Wird eigene MAC-Adresse abgefragt?
                                 if (ar_pdu.targetProtoAddr == ownIpAddrs[cl_idu.lpName]) {
                                     // Ja
                                     // ARP-Reply senden
-
+                                    System.out.println("ARP_REQUEST if")
                                     Utils.writeLog("LinkLayer", "receive", "empfaengt ARP-Request und sendet Reply", 5)
 
                                     ar_pdu.operation = ARP_REPLY
@@ -266,8 +271,7 @@ class LinkLayer {
                 ar_pdu.senderHardAddr = ownMacAddrs[il_idu.lpName] // MAC-Adresse des Senders
 
                 ar_pdu.targetProtoAddr = waitDstIpAddr // IP-Adresse des ARP-Ziels
-                ar_pdu.targetHardAddr = "00:00:00:00:00:00" +
-                        "" // Gesuchter Eintrag
+                ar_pdu.targetHardAddr = "00:00:00:00:00:00" //Gesuchter Eintrag
 
                 macFrame.dstMacAddr = broadcastMacAddress // Broadcast-MAC-Zieladresse
                 macFrame.sdu = ar_pdu

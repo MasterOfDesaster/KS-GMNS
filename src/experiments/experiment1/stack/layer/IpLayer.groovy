@@ -189,7 +189,7 @@ class IpLayer {
             //nextHopAddr = ownIpAddrs[linkPortName]
             nextHopAddr = ti_idu.dstIpAddr
 //            // Nächstes Gerät (next hop) auf dem Pfad zum Zielgerät suchen
-//            (linkPortName, nextHopAddr) = findNextHop(ti_idu.dstIpAddr)
+           (linkPortName, nextHopAddr) = findNextHop(ti_idu.dstIpAddr)
 
             // Nächsten Hop gefunden?
             if (linkPortName && nextHopAddr) {
@@ -218,15 +218,14 @@ class IpLayer {
                 il_idu.lpName = linkPortName
 
                 // Ist es eine direkte Route?
-//                if (nextHopAddr == ownIpAddrs[linkPortName])
-//                    // Ja
-//                    il_idu.nextHopAddr = ???
-//                else
-//                    // Nein
-//                    il_idu.nextHopAddr = ???
-//
+                if (nextHopAddr == ownIpAddrs[linkPortName])
+                    // Ja
+                    il_idu.nextHopAddr = ownIpAddrs[linkPortName]
+                else
+                    // Nein
+                    il_idu.nextHopAddr = nextHopAddr
+
                 // IP-Adresse des naechsten Geraetes auf dem Pfad zum Ziel eintragen
-                il_idu.nextHopAddr = nextHopAddr
 
                 // Daten an Link-Schicht uebergeben
                 toLinkQ.put(il_idu)
@@ -255,7 +254,7 @@ class IpLayer {
             // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
             Utils.getNetworkId(dstIpAddr, entry[1] as String) == entry[0]
         }
-
+        Utils.writeLog("IPLayer", "findNextHop", "entryx: " + entryx, 4)
         // Ausgang gefunden?
         if (entryx) {
             // Ja
