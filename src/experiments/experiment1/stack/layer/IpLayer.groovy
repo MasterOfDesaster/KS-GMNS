@@ -140,7 +140,7 @@ class IpLayer {
                         il_idu.nextHopAddr = i_pdu.dstIpAddr
                     else
                         // Nein
-                        il_idu.nextHopAddr = defaultRouter
+                        il_idu.nextHopAddr = nextHopAddr
 
                     Utils.writeLog("IpLayer", "receive", "forwarding: ${li_idu}", 4)
 
@@ -220,10 +220,10 @@ class IpLayer {
                 // Ist es eine direkte Route?
                 if (nextHopAddr == ownIpAddrs[linkPortName])
                     // Ja
-                    il_idu.nextHopAddr = ownIpAddrs[linkPortName]
+                    il_idu.nextHopAddr = i_pdu.dstIpAddr
                 else
                     // Nein
-                    il_idu.nextHopAddr = nextHopAddr
+                    il_idu.nextHopAddr = defaultRouter
 
                 // IP-Adresse des naechsten Geraetes auf dem Pfad zum Ziel eintragen
 
