@@ -188,7 +188,7 @@ class IpLayer {
             linkPortName = "lp1"
             //nextHopAddr = ownIpAddrs[linkPortName]
             nextHopAddr = ti_idu.dstIpAddr
-//            // Nächstes Gerät (next hop) auf dem Pfad zum Zielgerät suchen
+            // Nächstes Gerät (next hop) auf dem Pfad zum Zielgerät suchen
            (linkPortName, nextHopAddr) = findNextHop(ti_idu.dstIpAddr)
 
             // Nächsten Hop gefunden?
@@ -254,7 +254,6 @@ class IpLayer {
             // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
             Utils.getNetworkId(dstIpAddr, entry[1] as String) == entry[0]
         }
-        Utils.writeLog("IPLayer", "findNextHop", "entryx: " + entryx, 4)
         // Ausgang gefunden?
         if (entryx) {
             // Ja
