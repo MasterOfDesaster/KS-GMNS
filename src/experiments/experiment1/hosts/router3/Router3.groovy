@@ -56,7 +56,7 @@ class Router3 {
     void router() {
 
         // Konfiguration holen
-        config = Utils.getConfig("experiment1", "router1")
+        config = Utils.getConfig("experiment1", "router3")
 
         // ------------------------------------------------------------
 
@@ -71,7 +71,7 @@ class Router3 {
 
         // ------------------------------------------------------------
 
-        Utils.writeLog("Router1", "router1", "startet", 1)
+        Utils.writeLog("Router3", "router3", "startet", 1)
 
         while (run) {
             // Periodisches Versenden von Routinginformationen

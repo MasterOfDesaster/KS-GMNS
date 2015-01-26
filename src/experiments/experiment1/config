@@ -258,7 +258,7 @@ environments {
                 [virtual: true,
                  lpName: "lp2",
                  link: experiments.experiment1.links.P2PLink3.id,
-                 connector: experiments.experiment1.links.P2PLink3.CONNECTOR_3,
+                 connector: experiments.experiment1.links.P2PLink3.CONNECTOR_2,
                  macAddr: "03:03:03:05:05:05",
                  ipAddr: "192.168.6.1"
                 ],
