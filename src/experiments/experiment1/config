@@ -199,15 +199,15 @@ environments {
 
             // Hier sind die IP-Adressen der benachbarten Router einzutragen
             neighborTable = [
-                             ["192.168.3.2", 5300],
-                             ["192.168.4.2", 5400]
+                             ["192.168.3.2", 5250],
+                             ["192.168.4.2", 5250]
                             ]
         }
         //=============================================================================================
 
         router2 {
             // Eigene TCP- und UDP-Portnummer
-            ownPort = 5300
+            ownPort = 5250
 
             networkConnectors = [
                 [virtual: true,
@@ -237,14 +237,14 @@ environments {
 
             neighborTable = [
                              ["192.168.3.1", 5250],
-                             ["192.168.6.1", 5350]
+                             ["192.168.6.1", 5250]
                             ]
         }
         //=============================================================================================
 
         router3 {
             // Eigene TCP- und UDP-Portnummer
-            ownPort = 5350
+            ownPort = 5250
 
             networkConnectors = [
                 [virtual: true,
@@ -282,15 +282,15 @@ environments {
             arpTable = [:]
 
             neighborTable = [
-                             ["192.168.6.2", 5300],
-                             ["192.168.5.1", 5400]
+                             ["192.168.6.2", 5250],
+                             ["192.168.5.1", 5250]
                             ]
         }
         //=============================================================================================
 
         router4 {
             // Eigene TCP- und UDP-Portnummer
-            ownPort = 5400
+            ownPort = 5250
 
             networkConnectors = [
                 [virtual: true,
@@ -319,7 +319,7 @@ environments {
             arpTable = [:]
 
             neighborTable = [
-                             ["192.168.5.2", 5350],
+                             ["192.168.5.2", 5250],
                              ["192.168.4.1", 5250]
                             ]
         }
