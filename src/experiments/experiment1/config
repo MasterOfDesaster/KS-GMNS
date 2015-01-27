@@ -294,34 +294,34 @@ environments {
 
             networkConnectors = [
                 [virtual: true,
-                 lpName: "lp1",
-                 link: experiments.experiment1.links.P2PLink2.id,
-                 connector: experiments.experiment1.links.P2PLink2.CONNECTOR_2,
-                 macAddr: "03:03:03:07:07:07",
-                 ipAddr: "192.168.4.2"
+                lpName: "lp1",
+                link: experiments.experiment1.links.P2PLink2.id,
+                connector: experiments.experiment1.links.P2PLink2.CONNECTOR_2,
+                macAddr: "03:03:03:07:07:07",
+                ipAddr: "192.168.4.2"
                 ],
 
                 [virtual: true,
-                 lpName: "lp2",
-                 link: experiments.experiment1.link.P2PLink4.id,
-                 connector: experiments.experiment1.link.P2PLink4.CONNECTOR_2,
-                 macAddr: "03:03:03:08:08:08",
-                 ipAddr: "192.168.5.1"
+                lpName: "lp2",
+                link: experiments.experiment1.links.P2PLink4.id,
+                connector: experiments.experiment1.links.P2PLink4.CONNECTOR_2,
+                macAddr: "03:03:03:08:08:08",
+                ipAddr: "192.168.5.1"
                 ]
 
-            ]
+                ]
 
-            routingTable = [
-                            ["192.168.4.0", "255.255.255.0", "192.168.4.2", "lp1"],
-                            ["192.168.5.0", "255.255.255.0", "192.168.5.1", "lp2"]
-                           ]
+                routingTable = [
+                                ["192.168.4.0", "255.255.255.0", "192.168.4.2", "lp1"],
+                                ["192.168.5.0", "255.255.255.0", "192.168.5.1", "lp2"]
+                               ]
 
-            arpTable = [:]
+                arpTable = [:]
 
-            neighborTable = [
-                             ["192.168.5.2", 5250],
-                             ["192.168.4.1", 5250]
-                            ]
+                neighborTable = [
+                                 ["192.168.4.1", 5250],
+                                 ["192.168.5.2", 5250]
+                                ]
         }
     }
 
