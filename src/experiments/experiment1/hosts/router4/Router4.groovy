@@ -103,7 +103,7 @@ class Router4 {
         // Jetzt aktuelle Routingtablle holen:
 //        rt = stack.getRoutingtable()
         // neue Routinginformationen bestimmen
-        //    zum Zerlegen einer Zeichenkette siehe "tokenize()"
+        // zum Zerlegen einer Zeichenkette siehe "tokenize()"
         // extrahieren von Information, dann iInfo als !Zeichenkette! erzeugen ...
         // Routingtabelle an Vermittlungsschicht uebergeben:
 //         stack.setRoutingtable(rt)
@@ -120,12 +120,12 @@ class Router4 {
         //TODO:
         // Paket mit Routinginformationen packen
         // ... z.B.
-//        routingTable = stack.getRoutingTable()
-//        // extrahieren von Information, dann iInfo als !Zeichenkette! erzeugen ...
-//        String rInfo = "inf1a, inf1b, ..., inf2a, inf2b, ..."
+        routingTable = stack.getRoutingTable()
+        // extrahieren von Information, dann iInfo als !Zeichenkette! erzeugen ...
+        String rInfo = "inf1a, inf1b, ..., inf2a, inf2b, ..."
 
         // Zum Senden uebergeben
-//        sendToNeigbors(rInfo)
+        sendToNeigbors(rInfo)
     }
 
     // ------------------------------------------------------------
