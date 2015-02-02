@@ -96,8 +96,16 @@ class Router3 {
         /** Empfangene Routinginformationen */
         String rInfo
 
+        /** neue Liste mit Daten*/
+        String[] newRInfo = new String()
+
         // Auf UDP-Empfang warten
         (iPAddr, port, rInfo) = stack.udpReceive()
+
+        newRInfo = rInfo.split()
+        for(int i = 0; i<newRInfo.length; i++){
+            System.out.println(newRInfo[i])
+        }
 
         //TODO:
         // Jetzt aktuelle Routingtablle holen:
