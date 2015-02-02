@@ -117,13 +117,21 @@ class Router4 {
 
     /** Periodisches Senden der Routinginformationen */
     void sendPeriodical() {
-        //TODO:
         // Paket mit Routinginformationen packen
         // ... z.B.
         routingTable = stack.getRoutingTable()
         // extrahieren von Information, dann iInfo als !Zeichenkette! erzeugen ...
-        String rInfo = "inf1a, inf1b, ..., inf2a, inf2b, ..."
+        String rInfo = ""
 
+        for(int i = 0; i < routingTable.size; i++){
+            for(int j = 0; j<4; j++){
+                if(j<3){
+                    rInfo+= routingTable[i][j] + ", "
+                }else{
+                    rInfo+= routingTable[i][j] + " | "
+                }
+            }
+        }
         // Zum Senden uebergeben
         sendToNeigbors(rInfo)
     }
