@@ -126,9 +126,9 @@ class Router1 {
         for(int i = 0; i < routingTable.size; i++){
             for(int j = 0; j<4; j++){
                 if(j<3){
-                    rInfo+= routingTable[i][j] + ", "
+                    rInfo+= routingTable[i][j] + ","
                 }else{
-                    rInfo+= routingTable[i][j] + " | "
+                    rInfo+= routingTable[i][j] + "|"
                 }
             }
         }
