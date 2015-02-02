@@ -96,9 +96,16 @@ class Router2 {
         /** Empfangene Routinginformationen */
         String rInfo
 
+        /** neue Liste mit Daten*/
+        String[] newRInfo = new String()
+
         // Auf UDP-Empfang warten
         (iPAddr, port, rInfo) = stack.udpReceive()
-        System.out.println(rInfo)
+
+        newRInfo = rInfo.split()
+        for(int i = 0; i<newRInfo.length; i++){
+            System.out.println(newRInfo[i])
+        }
 
         //TODO:
         // Jetzt aktuelle Routingtablle holen:
@@ -119,21 +126,21 @@ class Router2 {
     /** Periodisches Senden der Routinginformationen */
     void sendPeriodical() {
         // Paket mit Routinginformationen packen
+        // ... z.B.
         routingTable = stack.getRoutingTable()
         // extrahieren von Information, dann iInfo als !Zeichenkette! erzeugen ...
-
         String rInfo = ""
 
-        for(int i = 0; i < routingTable.size() ; i++){
+        for(int i = 0; i < routingTable.size; i++){
             for(int j = 0; j<4; j++){
                 if(j<3){
-                    rInfo+= routingTable[i][j] + ", "
+                    rInfo+= routingTable[i][j] + ","
                 }else{
-                    rInfo+= routingTable[i][j] + " | "
+                    rInfo+= routingTable[i][j] + "|"
                 }
             }
         }
-        System.out.println(rInfo)
+        // Zum Senden uebergeben
         sendToNeigbors(rInfo)
     }
 

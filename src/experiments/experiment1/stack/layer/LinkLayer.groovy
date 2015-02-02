@@ -257,7 +257,6 @@ class LinkLayer {
                 // Warten auf ARP-Reply, wird in "receive" geaendert
                 waitARP = true
                 waitDstIpAddr = il_idu.nextHopAddr
-                System.out.println("nextHopAddr: " + il_idu.nextHopAddr)
 
                 // ARP_PDU erzeugen
                 AR_PDU ar_pdu = new AR_PDU()
