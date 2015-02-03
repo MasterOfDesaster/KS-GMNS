@@ -1,6 +1,7 @@
 package experiments.experiment1.hosts.router1
 
 import common.utils.Utils
+import experiments.experiment1.stack.layer.IpLayer
 
 /**
  * Ein IPv4-Router.<br/>
@@ -101,17 +102,40 @@ class Router1 {
 
         // Auf UDP-Empfang warten
         (iPAddr, port, rInfo) = stack.udpReceive()
-
+        //neue Routinginformationen "portionieren" per .split()
         newRInfo = rInfo.split()
-        for(int i = 0; i<newRInfo.length; i++){
-            System.out.println(newRInfo[i])
-        }
-
-        //TODO:
         // Jetzt aktuelle Routingtablle holen:
-//        rt = stack.getRoutingtable()
+        routingTable = stack.getRoutingTable()
+
+        //counter für newRInfo
+        int c = 0
+        //linkPort zur Route
+        String linkPort = "lp1"
+        //routingIP für die Tabelle
+        String routingIp
+
+        while(c<=newRInfo.length){
+            for(int i = 0; i<routingTable.size(); i++){
+                if(routingTable[i][0]){
+                    Utils.writeLog("Router1", "routing", "Eintrag bereits vorhanden", 1)
+                    break
+                }else{
+                    List entryx
+                    // Routingtabelleneinträge durchsuchen
+                    entryx = routingTable.find { entry ->
+                        // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
+                        Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
+                    }
+                    linkPort = entryx[3]
+                    routingIp = entryx[2]
+                    routingTable.add([newRInfo[c],newRInfo[c+1],routingIp,linkPort])
+                    break
+                }
+            }
+            c+4
+        }
+        //TODO:
         // neue Routinginformationen bestimmen
-        //    zum Zerlegen einer Zeichenkette siehe "tokenize()"
         // extrahieren von Information, dann iInfo als !Zeichenkette! erzeugen ...
         // Routingtabelle an Vermittlungsschicht uebergeben:
 //         stack.setRoutingtable(rt)
@@ -131,7 +155,7 @@ class Router1 {
         // extrahieren von Information, dann iInfo als !Zeichenkette! erzeugen ...
         String rInfo = ""
 
-        for(int i = 0; i < routingTable.size; i++){
+        for(int i = 0; i < routingTable.size(); i++){
             for(int j = 0; j<4; j++){
                 rInfo += routingTable[i][j] + " "
             }
