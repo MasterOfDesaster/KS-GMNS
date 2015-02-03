@@ -101,24 +101,44 @@ class Router2 {
 
         // Auf UDP-Empfang warten
         (iPAddr, port, rInfo) = stack.udpReceive()
-
+        //neue Routinginformationen "portionieren" per .split()
         newRInfo = rInfo.split()
-        for(int i = 0; i<newRInfo.length; i++){
-            System.out.println(newRInfo[i])
-        }
-
-        //TODO:
         // Jetzt aktuelle Routingtablle holen:
-//        rt = stack.getRoutingtable()
-        // neue Routinginformationen bestimmen
-        //    zum Zerlegen einer Zeichenkette siehe "tokenize()"
-        // extrahieren von Information, dann iInfo als !Zeichenkette! erzeugen ...
+        routingTable = stack.getRoutingTable()
+
+        //counter für newRInfo
+        int c = 0
+        //linkPort zur Route
+        String linkPort
+        //routingIP für die Tabelle
+        String routingIp
+
+        //Tabelle ergänzen
+        while(c<=newRInfo.length) {
+            List entryx
+            // Routingtabelleneinträge durchsuchen
+            entryx = routingTable.find { entry ->
+                // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
+                Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
+            }
+            //linkPort und routingIp bestimmen
+            linkPort = entryx[3]
+            routingIp = entryx[2]
+            //schauen ob Eintrag bereits in Routingtabelle vorhanden
+            for (int i = 0; i < routingTable.size(); i++) {
+                if (routingTable[i][0] == newRInfo[c] && routingTable[i][2] == routingIp) {
+                    Utils.writeLog("Router2", "routing", "Eintrag bereits vorhanden", 1)
+                    break
+                }
+            }
+            //Eintrag hinzufügen
+            routingTable.add([newRInfo[c], newRInfo[c + 1], routingIp, linkPort])
+            c + 4
+        }
         // Routingtabelle an Vermittlungsschicht uebergeben:
-//         stack.setRoutingtable(rt)
+        stack.setRoutingTable(routingTable)
         // und neue Routinginformationen verteilen:
-//        rInfo = ...
-//        sendToNeigbors(rInfo)
-        // oder periodisch verteilen lassen
+        sendPeriodical()
     }
 
     // ------------------------------------------------------------

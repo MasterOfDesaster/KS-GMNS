@@ -114,35 +114,32 @@ class Router1 {
         //routingIP für die Tabelle
         String routingIp
 
-        while(c<=newRInfo.length){
-            for(int i = 0; i<routingTable.size(); i++){
-                if(routingTable[i][0]){
+        //Tabelle ergänzen
+        while(c<=newRInfo.length) {
+            List entryx
+            // Routingtabelleneinträge durchsuchen
+            entryx = routingTable.find { entry ->
+                // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
+                Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
+            }
+            //linkPort und routingIp bestimmen
+            linkPort = entryx[3]
+            routingIp = entryx[2]
+            //schauen ob Eintrag bereits in Routingtabelle vorhanden
+            for (int i = 0; i < routingTable.size(); i++) {
+                if (routingTable[i][0] == newRInfo[c] && routingTable[i][2] == routingIp) {
                     Utils.writeLog("Router1", "routing", "Eintrag bereits vorhanden", 1)
-                    break
-                }else{
-                    List entryx
-                    // Routingtabelleneinträge durchsuchen
-                    entryx = routingTable.find { entry ->
-                        // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
-                        Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
-                    }
-                    linkPort = entryx[3]
-                    routingIp = entryx[2]
-                    routingTable.add([newRInfo[c],newRInfo[c+1],routingIp,linkPort])
                     break
                 }
             }
-            c+4
+            //Eintrag hinzufügen
+            routingTable.add([newRInfo[c], newRInfo[c + 1], routingIp, linkPort])
+            c + 4
         }
-        //TODO:
-        // neue Routinginformationen bestimmen
-        // extrahieren von Information, dann iInfo als !Zeichenkette! erzeugen ...
         // Routingtabelle an Vermittlungsschicht uebergeben:
-//         stack.setRoutingtable(rt)
+         stack.setRoutingTable(routingTable)
         // und neue Routinginformationen verteilen:
-//        rInfo = ...
-//        sendToNeigbors(rInfo)
-        // oder periodisch verteilen lassen
+        sendPeriodical()
     }
 
     // ------------------------------------------------------------
