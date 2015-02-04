@@ -99,26 +99,61 @@ class Router2 {
         /** neue Liste mit Daten*/
         String[] newRInfo = new String()
 
+        /** neue routing Tabelle */
+        List rt
+
+        /** counter für newRInfo */
+        int c = 0
+
+        /** linkPort zur Route */
+        String linkPort = "lp1"
+
+        /** routingIP für die Tabelle */
+        String routingIp
+
         // Auf UDP-Empfang warten
         (iPAddr, port, rInfo) = stack.udpReceive()
 
+        //neue Routinginformationen "portionieren" per .split()
         newRInfo = rInfo.split()
-        for(int i = 0; i<newRInfo.length; i++){
-            System.out.println(newRInfo[i])
-        }
 
-        //TODO:
         // Jetzt aktuelle Routingtablle holen:
-//        rt = stack.getRoutingtable()
-        // neue Routinginformationen bestimmen
-        //    zum Zerlegen einer Zeichenkette siehe "tokenize()"
-        // extrahieren von Information, dann iInfo als !Zeichenkette! erzeugen ...
+        rt = stack.getRoutingTable()
+
+        //Wahrheitswert ob Routingtabellen-Eintrag bereits existiert
+        boolean exists = false
+
+        //Tabelle ergänzen
+        while(c<=newRInfo.length) {
+            List entryx
+            // Routingtabelleneinträge durchsuchen
+            entryx = rt.find { entry ->
+                // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
+                Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
+            }
+            //linkPort und routingIp bestimmen
+            linkPort = entryx[3]
+            routingIp = entryx[2]
+            //schauen ob Eintrag bereits in Routingtabelle vorhanden
+            for (int i = 0; i < rt.size(); i++) {
+                if (rt[i][0] == newRInfo[c] && rt[i][2] == routingIp) {
+                    Utils.writeLog("Router2", "routing", "Eintrag bereits vorhanden", 1)
+                    exists = true
+                    break
+                }
+            }
+            //Eintrag hinzufügen
+            if(exists == false) {
+                rt.add([newRInfo[c], newRInfo[c + 1], routingIp, linkPort])
+                Utils.writeLog("Router2", "routing", "Schreibt neue Route", 1)
+            }
+            c + 4
+            exists = false
+        }
         // Routingtabelle an Vermittlungsschicht uebergeben:
-//         stack.setRoutingtable(rt)
+        stack.setRoutingTable(rt)
         // und neue Routinginformationen verteilen:
-//        rInfo = ...
-//        sendToNeigbors(rInfo)
-        // oder periodisch verteilen lassen
+        sendPeriodical()
     }
 
     // ------------------------------------------------------------
