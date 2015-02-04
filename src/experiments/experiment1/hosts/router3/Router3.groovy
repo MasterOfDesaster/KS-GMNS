@@ -165,13 +165,14 @@ class Router3 {
             //schauen ob Eintrag bereits in Routingtabelle vorhanden
             for (int i = 0; i < rt.size(); i++) {
                 if (rt[i][0] == newRInfo[c] && rt[i][2] == routingIp) {
+                    //Wenn ja, so lassen und counter zurücksetzen, da sie noch existiert
                     Utils.writeLog("Router3", "routing", "Eintrag bereits vorhanden", 1)
                     counterTable[i][4] = counter
                     exists = true
                     break
                 }
             }
-            //Eintrag hinzufügen
+            //Wenn nicht, Eintrag hinzufügen
             if(exists == false) {
                 rt.add([newRInfo[c], newRInfo[c + 1], routingIp, linkPort])
                 counterTable.add([newRInfo[c], newRInfo[c+1], routingIp, linkPort, counter])
@@ -191,7 +192,6 @@ class Router3 {
     /** Periodisches Senden der Routinginformationen */
     void sendPeriodical() {
         // Paket mit Routinginformationen packen
-        // ... z.B.
         routingTable = stack.getRoutingTable()
         // extrahieren von Information, dann iInfo als !Zeichenkette! erzeugen ...
         String rInfo = ""
