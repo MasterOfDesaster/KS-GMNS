@@ -121,6 +121,9 @@ class Router1 {
         // Jetzt aktuelle Routingtablle holen:
         rt = stack.getRoutingTable()
 
+        //Wahrheitswert ob Routingtabellen-Eintrag bereits existiert
+        boolean exists = false
+
         //Tabelle ergänzen
         while(c<=newRInfo.length) {
             List entryx
@@ -136,12 +139,17 @@ class Router1 {
             for (int i = 0; i < rt.size(); i++) {
                 if (rt[i][0] == newRInfo[c] && rt[i][2] == routingIp) {
                     Utils.writeLog("Router1", "routing", "Eintrag bereits vorhanden", 1)
+                    exists = true
                     break
                 }
             }
             //Eintrag hinzufügen
-            rt.add([newRInfo[c], newRInfo[c + 1], routingIp, linkPort])
+            if(exists == false) {
+                rt.add([newRInfo[c], newRInfo[c + 1], routingIp, linkPort])
+                Utils.writeLog("Router1", "routing", "Schreibt neue Route", 1)
+            }
             c + 4
+            exists = false
         }
         // Routingtabelle an Vermittlungsschicht uebergeben:
         stack.setRoutingTable(rt)
