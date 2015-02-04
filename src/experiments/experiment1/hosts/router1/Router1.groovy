@@ -139,29 +139,13 @@ class Router1 {
         //Wahrheitswert ob Routingtabellen-Eintrag bereits existiert
         boolean exists = false
 
-        List entryx
-        // Routingtabelleneinträge durchsuchen
-        entryx = rt.find { entry ->
-            // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
-            Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
-        }
-        //linkPort und routingIp bestimmen
-        linkPort = entryx[3]
-        routingIp = entryx[2]
-
         new Timer().schedule({
             for(int j = 0; j < counterTable.size(); j++){
                 //counter um eins runtersetzen
 
                 //falls counter == 0 löschen der Einträge
                 if(counterTable[j][2] == 0){
-                    counterTable.remove(j)
-                    for(int i = 0; i<neighborTable.size(); i++){
-                        if(neighborTable[i][1] == counterTable(j)[1]){
-                            neighborTable.remove(i)
-                        }
-                    }
-
+                    cleanRoutingTable(rt, counterTable[j][0])
                 }
             }
 
@@ -180,6 +164,16 @@ class Router1 {
             neighborTable.add([iPAddr, port])
             counterTable.add([iPAddr, port, counter])
         }
+
+        List entryx
+        // Routingtabelleneinträge durchsuchen
+        entryx = rt.find { entry ->
+            // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
+            Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
+        }
+        //linkPort und routingIp bestimmen
+        linkPort = entryx[3]
+        routingIp = entryx[2]
 
         //Tabelle ergänzen
         while(c<=newRInfo.length) {
@@ -242,6 +236,19 @@ class Router1 {
 
     void cleanRoutingTable(List routingTable, String IP){
         //TODO:cleanRouting Table via NachbarIpAdresse
+        List entryx
+        // Routingtabelleneinträge durchsuchen
+        entryx = rt.find { entry ->
+            // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
+            Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
+        }
+        //deadIp bestimmen
+        deadIp = entryx[2]
+        for(int i = 0; i<rt.size(); i++){
+            if(rt[i][2] == deadIp){
+                rt.remove(i)
+            }
+        }
     }
 }
 
