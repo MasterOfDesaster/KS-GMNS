@@ -31,6 +31,12 @@ class Router3 {
     /** Eine Arbeitskopie der Routingtabelle der Netzwerkschicht */
     List routingTable
 
+    /** Nachbartabellenkopie mit Zaehltimer fuer aktualisierung */
+    List<List> counterTable
+
+    /** counter zum Runterzählen der Einträg*/
+    int counter = 5
+
     //========================================================================================================
     // Methoden ANFANG
     //========================================================================================================
@@ -123,21 +129,44 @@ class Router3 {
         //Wahrheitswert ob Routingtabellen-Eintrag bereits existiert
         boolean exists = false
 
+        List counterTable = rt.collectNested{it}
+        for(List entry in counterTable){
+            entry.add(counter)
+        }
+
+        new Timer().schedule({
+            for(int j = 3; j < counterTable.size(); j++){
+                //counter um eins runtersetzen
+                Object k
+                k = counterTable[j][4]
+                k--
+                counterTable[j][4] = k
+                //falls counter == 0 löschen der Einträge
+                if(counterTable[j][4] == 0){
+                    counterTable.remove(j)
+                    rt.remove(j)
+                }
+            }
+
+        }as TimerTask,10000,1000)
+
+        List entryx
+        // Routingtabelleneinträge durchsuchen
+        entryx = rt.find { entry ->
+            // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
+            Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
+        }
+        //linkPort und routingIp bestimmen
+        linkPort = entryx[3]
+        routingIp = entryx[2]
+
         //Tabelle ergänzen
         while(c<=newRInfo.length) {
-            List entryx
-            // Routingtabelleneinträge durchsuchen
-            entryx = rt.find { entry ->
-                // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
-                Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
-            }
-            //linkPort und routingIp bestimmen
-            linkPort = entryx[3]
-            routingIp = entryx[2]
             //schauen ob Eintrag bereits in Routingtabelle vorhanden
             for (int i = 0; i < rt.size(); i++) {
                 if (rt[i][0] == newRInfo[c] && rt[i][2] == routingIp) {
                     Utils.writeLog("Router3", "routing", "Eintrag bereits vorhanden", 1)
+                    counterTable[i][4] = counter
                     exists = true
                     break
                 }
@@ -145,6 +174,7 @@ class Router3 {
             //Eintrag hinzufügen
             if(exists == false) {
                 rt.add([newRInfo[c], newRInfo[c + 1], routingIp, linkPort])
+                counterTable.add([newRInfo[c], newRInfo[c+1], routingIp, linkPort, counter])
                 Utils.writeLog("Router3", "routing", "Schreibt neue Route", 1)
             }
             c + 4
@@ -168,11 +198,7 @@ class Router3 {
 
         for(int i = 0; i < routingTable.size; i++){
             for(int j = 0; j<4; j++){
-                if(j<3){
-                    rInfo+= routingTable[i][j] + ","
-                }else{
-                    rInfo+= routingTable[i][j] + "|"
-                }
+                rInfo += routingTable[i][j] + " "
             }
         }
         // Zum Senden uebergeben

@@ -70,15 +70,6 @@ class Router1 {
         // Netzwerkstack initialisieren
         stack = new experiments.experiment1.stack.Stack()
         stack.start(config)
-        neighborTable = config.neighborTable
-        if(neighborTable == null){
-            neighborTable = []
-        }
-
-        List counterTable = neighborTable.collectNested{it}
-        for(List entry in counterTable){
-            entry.add(counter)
-        }
 
         // ------------------------------------------------------------
 
@@ -139,31 +130,26 @@ class Router1 {
         //Wahrheitswert ob Routingtabellen-Eintrag bereits existiert
         boolean exists = false
 
-        new Timer().schedule({
-            for(int j = 0; j < counterTable.size(); j++){
-                //counter um eins runtersetzen
+        List counterTable = rt.collectNested{it}
+        for(List entry in counterTable){
+            entry.add(counter)
+        }
 
+        new Timer().schedule({
+            for(int j = 3; j < counterTable.size(); j++){
+                //counter um eins runtersetzen
+                Object k
+                k = counterTable[j][4]
+                k--
+                counterTable[j][4] = k
                 //falls counter == 0 löschen der Einträge
-                if(counterTable[j][2] == 0){
-                    cleanRoutingTable(rt, counterTable[j][0])
+                if(counterTable[j][4] == 0){
+                    counterTable.remove(j)
+                    rt.remove(j)
                 }
             }
 
         }as TimerTask,10000,1000)
-
-        if(neighborTable.contains(iPAddr, port)){
-            //Nachbar existiert noch, counter wird zurückgesetzt
-            for(int i = 0; i < counterTable.size(); i++){
-                if(counterTable[i][0] == iPAddr && counterTable[i][1] == port){
-                    counterTable[i][2] = counter
-                    break
-                }
-            }
-        }else{
-            //Nachbar existierte nicht, wird neu hinzugefügt
-            neighborTable.add([iPAddr, port])
-            counterTable.add([iPAddr, port, counter])
-        }
 
         List entryx
         // Routingtabelleneinträge durchsuchen
@@ -181,6 +167,7 @@ class Router1 {
             for (int i = 0; i < rt.size(); i++) {
                 if (rt[i][0] == newRInfo[c] && rt[i][2] == routingIp) {
                     Utils.writeLog("Router1", "routing", "Eintrag bereits vorhanden", 1)
+                    counterTable[i][4] = counter
                     exists = true
                     break
                 }
@@ -188,6 +175,7 @@ class Router1 {
             //Eintrag hinzufügen
             if(exists == false) {
                 rt.add([newRInfo[c], newRInfo[c + 1], routingIp, linkPort])
+                counterTable.add([newRInfo[c], newRInfo[c+1], routingIp, linkPort, counter])
                 Utils.writeLog("Router1", "routing", "Schreibt neue Route", 1)
             }
             c + 4
