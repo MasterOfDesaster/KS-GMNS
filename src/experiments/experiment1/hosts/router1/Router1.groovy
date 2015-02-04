@@ -32,6 +32,12 @@ class Router1 {
     /** Eine Arbeitskopie der Routingtabelle der Netzwerkschicht */
     List routingTable
 
+    /** Nachbartabellenkopie mit Zaehltimer fuer aktualisierung */
+    List<List> counterTable
+
+    /** counter zum Runterzählen der Einträg*/
+    int counter = 5
+
     //========================================================================================================
     // Methoden ANFANG
     //========================================================================================================
@@ -64,6 +70,15 @@ class Router1 {
         // Netzwerkstack initialisieren
         stack = new experiments.experiment1.stack.Stack()
         stack.start(config)
+        neighborTable = config.neighborTable
+        if(neighborTable == null){
+            neighborTable = []
+        }
+
+        List counterTable = neighborTable.collectNested{it}
+        for(List entry in counterTable){
+            entry.add(counter)
+        }
 
         // ------------------------------------------------------------
 
@@ -124,17 +139,50 @@ class Router1 {
         //Wahrheitswert ob Routingtabellen-Eintrag bereits existiert
         boolean exists = false
 
+        List entryx
+        // Routingtabelleneinträge durchsuchen
+        entryx = rt.find { entry ->
+            // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
+            Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
+        }
+        //linkPort und routingIp bestimmen
+        linkPort = entryx[3]
+        routingIp = entryx[2]
+
+        new Timer().schedule({
+            for(int j = 0; j < counterTable.size(); j++){
+                //counter um eins runtersetzen
+
+                //falls counter == 0 löschen der Einträge
+                if(counterTable[j][2] == 0){
+                    counterTable.remove(j)
+                    for(int i = 0; i<neighborTable.size(); i++){
+                        if(neighborTable[i][1] == counterTable(j)[1]){
+                            neighborTable.remove(i)
+                        }
+                    }
+
+                }
+            }
+
+        }as TimerTask,10000,1000)
+
+        if(neighborTable.contains(iPAddr, port)){
+            //Nachbar existiert noch, counter wird zurückgesetzt
+            for(int i = 0; i < counterTable.size(); i++){
+                if(counterTable[i][0] == iPAddr && counterTable[i][1] == port){
+                    counterTable[i][2] = counter
+                    break
+                }
+            }
+        }else{
+            //Nachbar existierte nicht, wird neu hinzugefügt
+            neighborTable.add([iPAddr, port])
+            counterTable.add([iPAddr, port, counter])
+        }
+
         //Tabelle ergänzen
         while(c<=newRInfo.length) {
-            List entryx
-            // Routingtabelleneinträge durchsuchen
-            entryx = rt.find { entry ->
-                // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
-                Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
-            }
-            //linkPort und routingIp bestimmen
-            linkPort = entryx[3]
-            routingIp = entryx[2]
             //schauen ob Eintrag bereits in Routingtabelle vorhanden
             for (int i = 0; i < rt.size(); i++) {
                 if (rt[i][0] == newRInfo[c] && rt[i][2] == routingIp) {
@@ -191,5 +239,9 @@ class Router1 {
         }
     }
     //------------------------------------------------------------------------------
+
+    void cleanRoutingTable(List routingTable, String IP){
+        //TODO:cleanRouting Table via NachbarIpAdresse
+    }
 }
 
