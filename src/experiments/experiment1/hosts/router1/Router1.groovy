@@ -70,6 +70,7 @@ class Router1 {
         // Netzwerkstack initialisieren
         stack = new experiments.experiment1.stack.Stack()
         stack.start(config)
+        neighborTable = config.neighborTable
 
         // ------------------------------------------------------------
 
