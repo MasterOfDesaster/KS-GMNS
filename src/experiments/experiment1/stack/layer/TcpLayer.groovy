@@ -141,7 +141,7 @@ class TcpLayer {
             [on: Event.E_RCVD_SYN_ACK, from: State.S_WAIT_SYN_ACK, to: State.S_SEND_SYN_ACK_ACK],
             [on: Event.E_SYN_ACK_ACK_SENT, from: State.S_SEND_SYN_ACK_ACK, to: State.S_READY],
 
-            // Passiver Verbindungsaufbau
+            // TODO: Passiver Verbindungsaufbau
             // ...
 
             // Datenübertragung: Senden
@@ -160,7 +160,7 @@ class TcpLayer {
             [on: Event.E_RCVD_FIN, from: State.S_WAIT_FIN_ACK, to: State.S_SEND_FIN_ACK_ACK],
             [on: Event.E_FIN_ACK_ACK_SENT, from: State.S_SEND_FIN_ACK_ACK, to: State.S_IDLE],
 
-            // Passiver Verbindungsabbau
+            // TODO: Passiver Verbindungsabbau
             // ...
         ]
 
@@ -215,7 +215,7 @@ class TcpLayer {
             // Hier z.B. noch auf richtigen Zielport testen
             // ...
 
-            // Entfernen von quittierten Daten aus der Warteschlange
+            //TODO: Entfernen von quittierten Daten aus der Warteschlange
             // fuer Sendewiederholungen
             // if (t_pdu.ackFlag)
             //     removeWaitQ(recvAckNum)
@@ -357,7 +357,7 @@ class TcpLayer {
                     break
 
             // ----------------------------------------------------------
-            // Passiver Verbindungsaufbau
+            // TODO: Passiver Verbindungsaufbau
             // ...
 
             // ----------------------------------------------------------
@@ -398,7 +398,7 @@ class TcpLayer {
                     break
 
             // ----------------------------------------------------------
-            // Passiver Verbindungsabbau
+            // TODO: Passiver Verbindungsabbau
             // ...
 
             // ----------------------------------------------------------
@@ -501,7 +501,7 @@ class TcpLayer {
         // Absendendes Protokoll eintragen
         ti_idu.protocol = IpLayer.PROTO_TCP
 
-        // IDU in Warteschlange fuer Sendewiederholungen eintragen
+        // TODO: IDU in Warteschlange fuer Sendewiederholungen eintragen
         // insertWaitQ(ti_idu)
 
         // Daten an IP-Schicht uebergeben
