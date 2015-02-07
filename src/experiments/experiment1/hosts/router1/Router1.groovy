@@ -1,7 +1,6 @@
 package experiments.experiment1.hosts.router1
 
 import common.utils.Utils
-import experiments.experiment1.stack.layer.IpLayer
 
 /**
  * Ein IPv4-Router.<br/>
@@ -29,14 +28,18 @@ class Router1 {
      */
     List<List> neighborTable
 
+    /** Tabelle um zu merken wenn ein Router nicht mehr mit einem spricht*/
+    List<List> tickTable
+
     /** Eine Arbeitskopie der Routingtabelle der Netzwerkschicht */
     List routingTable
 
-    /** Nachbartabellenkopie mit Zaehltimer fuer aktualisierung */
-    List<List> counterTable
+    /** Boolean um abzufragen ob noch irgendjemand mit dir redet*/
+    Boolean stillThere
 
-    /** counter zum Runterzählen der Einträg*/
-    int counter = 5
+    /** Routingtabelle fuer reset*/
+    List<List> resetRT
+    List<List> newRT
 
     //========================================================================================================
     // Methoden ANFANG
@@ -70,7 +73,18 @@ class Router1 {
         // Netzwerkstack initialisieren
         stack = new experiments.experiment1.stack.Stack()
         stack.start(config)
-        neighborTable = config.neighborTable
+        neighborTable=config.neighborTable
+        resetRT=config.routingTable
+        stillThere=false
+        if(neighborTable==null){
+            neighborTable=[]
+        }
+
+        // tickTable initialisieren
+        tickTable = neighborTable.collectNested{it}
+        for( List entry in tickTable) {
+            entry.add(0)
+        }
 
         // ------------------------------------------------------------
 
@@ -104,89 +118,142 @@ class Router1 {
         /** Empfangene Routinginformationen */
         String rInfo
 
-        /** neue Liste mit Daten*/
-        String[] newRInfo = new String()
-
-        /** neue routing Tabelle */
-        List rt
-
-        /** counter für newRInfo */
-        int c = 0
-
-        /** linkPort zur Route */
-        String linkPort = "lp1"
-
-        /** routingIP für die Tabelle */
-        String routingIp
-
-        // Auf UDP-Empfang warten
-        (iPAddr, port, rInfo) = stack.udpReceive()
-
-        //neue Routinginformationen "portionieren" per .split()
-        newRInfo = rInfo.split()
-
-        // Jetzt aktuelle Routingtablle holen:
-        rt = stack.getRoutingTable()
-
-        //Wahrheitswert ob Routingtabellen-Eintrag bereits existiert
-        boolean exists = false
-
-        List counterTable = rt.collectNested{it}
-        for(List entry in counterTable){
-            entry.add(counter)
-        }
-
         new Timer().schedule({
-            for(int j = 3; j < counterTable.size(); j++){
-                //counter um eins runtersetzen
-                Object k
-                k = counterTable[j][4]
-                k--
-                counterTable[j][4] = k
-                //falls counter == 0 löschen der Einträge
-                if(counterTable[j][4] == 0){
-                    counterTable.remove(j)
-                    rt.remove(j)
+            if(stillThere==false){
+
+                neighborTable.clear()
+                tickTable.clear()
+                stack.setRoutingTable(resetRT)
+            }else{
+                stillThere=false
+            }
+        } as TimerTask,10000,8000)
+
+        while(1) {
+
+            int ticklimit=neighborTable.size()
+
+            // Auf UDP-Empfang warten
+            (iPAddr, port, rInfo) = stack.udpReceive()
+            stillThere=true
+            Utils.writeLog("Router1", "empfängt von " + iPAddr, "Routinginformationen", 1)
+
+            List rInfoList = rInfo.tokenize("|")
+            List<List> rInfoTable = []
+            for (String part in rInfoList) {
+                rInfoTable.add(part.tokenize(", "))
+
+            }
+
+            Utils.writeLog("Router1", "schreibt", "neue Routinginformationen", 1)
+
+            //Vorraussetzung: Nur Nachbarrouter sprechen untereinander
+
+            // Aktualisieren von NeighborTable
+
+            if(!neighborTable.contains([iPAddr,port])) {
+                //Neuer Nachbar!!
+
+                neighborTable.add([iPAddr,port])
+                tickTable.add([iPAddr,port, 0])
+            }
+            List<List> rem = []
+            tickTable.each { List p ->
+                if(p[0] == iPAddr) {
+                    p[2] = 0
+                }else if(p[2] < ticklimit) {
+                    p[2]++
+                } else{
+                    rem.add(p.clone())
                 }
             }
+            rem.each{ List p ->
+                tickTable.remove(p)
+                def List q=p.clone()
+                q.remove(2)
+                neighborTable.remove(q)
+            }
 
-        }as TimerTask,10000,1000)
+            List<List> rt= stack.getRoutingTable()
 
-        List entryx
-        // Routingtabelleneinträge durchsuchen
-        entryx = rt.find { entry ->
-            // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
-            Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
-        }
-        //linkPort und routingIp bestimmen
-        linkPort = entryx[3]
-        routingIp = entryx[2]
+            List<List> tbd = [] //Liste mit zu löschenden Einträgen
 
-        //Tabelle ergänzen
-        while(c<=newRInfo.length) {
-            //schauen ob Eintrag bereits in Routingtabelle vorhanden
-            for (int i = 0; i < rt.size(); i++) {
-                if (rt[i][0] == newRInfo[c] && rt[i][2] == routingIp) {
-                    //Wenn ja, so lassen und counter zurücksetzen, da sie noch existiert
-                    Utils.writeLog("Router1", "routing", "Eintrag bereits vorhanden", 1)
-                    counterTable[i][4] = counter
-                    exists = true
-                    break
+            for( List eRT in rt){
+                for(List eRI in rInfoTable) {
+
+                    // Eintrag in eigener Liste vorhanden
+                    if(eRT[0] == eRI[0]) {
+
+                        //Beide Eintraege werden per Metrik Verglichen
+                        if(eRT[4].toInteger() > (1 + eRI[4].toInteger()) ){
+                            //ubernehme eintrag
+
+                            eRT[2] = iPAddr //Nachbarrouter wird nextHop
+                            String linkport
+                            String nexthop
+                            (linkport,nexthop) = stack.ip.findNextHop(iPAddr)
+                            eRT[3]=linkport
+
+                            //Metrik errechnen
+                            eRT[4] = (eRI[4].toInteger() + 1).toString()
+                        }
+                        //eintrag im spaeter aus rInfoTable loeschen
+
+                        tbd.add(eRI.clone())
+                    }
+
                 }
+
             }
-            //Wenn nicht, Eintrag hinzufügen
-            if(exists == false) {
-                rt.add([newRInfo[c], newRInfo[c + 1], routingIp, linkPort])
-                counterTable.add([newRInfo[c], newRInfo[c+1], routingIp, linkPort, counter])
-                Utils.writeLog("Router1", "routing", "Schreibt neue Route", 1)
+
+            tbd.each{
+                List p -> rInfoTable.remove(p)
             }
-            c + 4
-            exists = false
+
+            //Noch neue information in rInfo
+            if(!rInfoTable.isEmpty()){
+                String linkport
+                String nexthop
+                for(List eRI in rInfoTable){
+                    (linkport,nexthop) = stack.ip.findNextHop(iPAddr)
+                    rt.add([eRI[0],eRI[1],iPAddr,linkport,(eRI[4].toInteger() + 1).toString()])
+                }
+
+            }
+            //NOCH ZU DEN ANDEREN ROOTERN KOPIEREN
+            //nicht-mehr-Nachbarn rauslöschen
+            newRT = []
+            Boolean check
+            List<String> neighbors = []
+            neighbors = neighborTable.collect { it[0] }
+
+            stack.ip.ownIpAddrs.each {
+                key, value -> neighbors.add(value)
+            }
+
+            for (List eRT in rt) {
+                //suche in Neighbortable
+                check = false
+                for (String s in neighbors) {
+
+                    if (eRT[2] == s) {
+                        check = true
+                    }
+
+                }
+
+                if (check) {
+                    newRT.add(eRT)
+                }
+
+
+            }
+
+
+            stack.setRoutingTable(newRT)
+
+
         }
-        // Routingtabelle an Vermittlungsschicht uebergeben:
-        stack.setRoutingTable(rt)
-        // und neue Routinginformationen verteilen:
-        sendPeriodical()
     }
 
     // ------------------------------------------------------------
@@ -199,8 +266,13 @@ class Router1 {
         String rInfo = ""
 
         for(int i = 0; i < routingTable.size(); i++){
-            for(int j = 0; j<4; j++){
-                rInfo += routingTable[i][j] + " "
+            for(int j = 0; j<4; j++) {
+                if (j == 3) {
+                    rInfo += routingTable[i][j] + "|"
+                } else {
+                    rInfo += routingTable[i][j] + ", "
+
+                }
             }
         }
         // Zum Senden uebergeben
@@ -219,25 +291,9 @@ class Router1 {
         for (List neigbor in neighborTable) {
             stack.udpSend(dstIpAddr: neigbor[0], dstPort: neigbor[1],
                     srcPort: config.ownPort, sdu: rInfo)
+            Utils.writeLog("Router1", "sendet", "Routinginformationen an: "+neigbor[0]+", "+neigbor[1], 1)
         }
     }
     //------------------------------------------------------------------------------
-
-    void cleanRoutingTable(List routingTable, String IP){
-        //TODO:cleanRouting Table via NachbarIpAdresse
-        List entryx
-        // Routingtabelleneinträge durchsuchen
-        entryx = rt.find { entry ->
-            // Ziel-Ip-Adresse UND Netzpräfix == Zieladresse ?
-            Utils.getNetworkId(iPAddr, entry[1] as String) == entry[0]
-        }
-        //deadIp bestimmen
-        deadIp = entryx[2]
-        for(int i = 0; i<rt.size(); i++){
-            if(rt[i][2] == deadIp){
-                rt.remove(i)
-            }
-        }
-    }
 }
 

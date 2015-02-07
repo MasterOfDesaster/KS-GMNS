@@ -25,7 +25,7 @@ timeOut = deltaTimeOut * 5 // Timeout fuer Sendewiederholung
 globalNetMask = "255.255.255.0"
 
 // Zeitabstand in Sekunden, in dem von Routern periodisch Routinginformationen verschickt werden
-periodRInfo = 2
+periodRInfo = 2000
 
 // Auswahl einer Ablaufumgebung durch Setzen der Konstanten "environment"
 environments {
