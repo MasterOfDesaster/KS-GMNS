@@ -266,8 +266,8 @@ class Router3 {
         String rInfo = ""
 
         for(int i = 0; i < routingTable.size(); i++){
-            for(int j = 0; j<4; j++) {
-                if (j == 3) {
+            for(int j = 0; j<5; j++) {
+                if (j == 4) {
                     rInfo += routingTable[i][j] + "|"
                 } else {
                     rInfo += routingTable[i][j] + ", "
