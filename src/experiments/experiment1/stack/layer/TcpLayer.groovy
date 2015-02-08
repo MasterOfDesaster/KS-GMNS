@@ -141,8 +141,12 @@ class TcpLayer {
             [on: Event.E_RCVD_SYN_ACK, from: State.S_WAIT_SYN_ACK, to: State.S_SEND_SYN_ACK_ACK],
             [on: Event.E_SYN_ACK_ACK_SENT, from: State.S_SEND_SYN_ACK_ACK, to: State.S_READY],
 
-            // TODO: Passiver Verbindungsaufbau
-            // ...
+            // Passiver Verbindungsaufbau
+            [on: Event.E_WAIT_REQ, from: State.S_IDLE, to: State.S_WAIT_SYN],
+            [on: Event.E_RCVD_SYN, from: State.S_WAIT_SYN, to: State.S_SEND_SYN_ACK],
+            [on: Event.E_SEND_SYN_ACK, from:State.S_SEND_SYN_ACK, to: State.S_WAIT_SYN_ACK_ACK],
+            [on: Event.E_RCVD_ACK, from: State.S_WAIT_SYN_ACK_ACK, to: State.S_RCVD_SYN_ACK_ACK],
+            [on: Event.E_RCVD_SYN_ACK_ACK, from: State.S_RCVD_SYN_ACK_ACK, to: State.S_READY],
 
             // Datenübertragung: Senden
             [on: Event.E_SEND_DATA, from: State.S_READY, to: State.S_SEND_DATA],
@@ -160,8 +164,11 @@ class TcpLayer {
             [on: Event.E_RCVD_FIN, from: State.S_WAIT_FIN_ACK, to: State.S_SEND_FIN_ACK_ACK],
             [on: Event.E_FIN_ACK_ACK_SENT, from: State.S_SEND_FIN_ACK_ACK, to: State.S_IDLE],
 
-            // TODO: Passiver Verbindungsabbau
-            // ...
+            // Passiver Verbindungsabbau
+            [on: Event.E_RCVD_FIN, from: State.S_READY, to: State.S_SEND_FIN_ACK],
+            [on: Event.E_FIN_ACK_SENT, from: State.S_SEND_FIN_ACK, to:State.S_WAIT_FIN_ACK_ACK],
+            [on: Event.E_RCVD_ACK, from: State.S_WAIT_FIN_ACK_ACK, to: State.S_RCVD_FIN_ACK_ACK],
+            [on: Event.E_RCVD_FIN_ACK_ACK, from: State.S_RCVD_FIN_ACK_ACK, to: State.S_IDLE]
         ]
 
     /** Die Finite Zustandsmaschine. */
@@ -213,44 +220,47 @@ class TcpLayer {
             Utils.writeLog("TcpLayer", "receive", "uebernimmt  von IP: ${it_idu}", 2)
 
             // Hier z.B. noch auf richtigen Zielport testen
-            // ...
+            if (ownPort == t_pdu.dstPort) {
 
-            //TODO: Entfernen von quittierten Daten aus der Warteschlange
-            // fuer Sendewiederholungen
-            // if (t_pdu.ackFlag)
-            //     removeWaitQ(recvAckNum)
+                //Entfernen von quittierten Daten aus der Warteschlange
+                // fuer Sendewiederholungen
+                if (t_pdu.ackFlag) {
+                    removeWaitQ(recvAckNum)
+                    Utils.writeLog("TcpLayer", "receive", "löscht Pakete mit der Nummer: ${recvAckNum}", 2)
+                }
 
-            // Analysieren einer empfangenen TCP-PDU
-            // Bestimmen eines Ereignises, "feuern" der FSM und Behandlung
-            // den neuen Zustands
-            recvSeqNum = t_pdu.seqNum
-            recvAckNum = t_pdu.ackNum
-            recvAckFlag = t_pdu.ackFlag
-            recvFinFlag = t_pdu.finFlag
-            recvSynFlag = t_pdu.synFlag
-            recvRstFlag = t_pdu.rstFlag
-            recvWindSize = t_pdu.windSize
-            recvData = t_pdu.sdu ? t_pdu.sdu : ""
+                // Analysieren einer empfangenen TCP-PDU
+                // Bestimmen eines Ereignises, "feuern" der FSM und Behandlung
+                // den neuen Zustands
+                recvSeqNum = t_pdu.seqNum
+                recvAckNum = t_pdu.ackNum
+                recvAckFlag = t_pdu.ackFlag
+                recvFinFlag = t_pdu.finFlag
+                recvSynFlag = t_pdu.synFlag
+                recvRstFlag = t_pdu.rstFlag
+                recvWindSize = t_pdu.windSize
+                recvData = t_pdu.sdu ? t_pdu.sdu : ""
 
-            if (recvSynFlag) {
-                dstIpAddr = it_idu.srcIpAddr
-                dstPort = t_pdu.srcPort
-            }
+                if (recvSynFlag) {
+                    dstIpAddr = it_idu.srcIpAddr
+                    dstPort = t_pdu.srcPort
+                }
 
-            //------------------------------------------------------------------
+                //------------------------------------------------------------------
 
-            int event = 0
-            // Ereignis bestimmen
-            switch(true) {
-                case (recvFinFlag):                          event = Event.E_RCVD_FIN      ;break
-                case (recvSynFlag && recvAckFlag):           event = Event.E_RCVD_SYN_ACK  ;break
-                case (recvAckFlag && t_pdu.sdu.size() == 0): event = Event.E_RCVD_ACK      ;break
-                case (recvAckFlag && t_pdu.sdu.size() > 0):  event = Event.E_RCVD_DATA     ;break
-            }
+                int event = 0
+                // Ereignis bestimmen
+                switch (true) {
+                    case (recvFinFlag): event = Event.E_RCVD_FIN; break
+                    case (recvSynFlag && recvAckFlag): event = Event.E_RCVD_SYN_ACK; break
+                    case (recvAckFlag && t_pdu.sdu.size() == 0): event = Event.E_RCVD_ACK; break
+                    case (recvAckFlag && t_pdu.sdu.size() > 0): event = Event.E_RCVD_DATA; break
+                }
 
-            if (event) {
-                // Neuen Zustand behandeln
-                handleStateChange(event)
+                if (event) {
+                    // Neuen Zustand behandeln
+                    handleStateChange(event)
+                }
             }
         }
     }
@@ -358,7 +368,45 @@ class TcpLayer {
 
             // ----------------------------------------------------------
             // TODO: Passiver Verbindungsaufbau
-            // ...
+                case (State.S_SEND_SYN_ACK):
+                    // SYN+ACK empfangen, ACK senden
+                    sendSynFlag =
+                    sendAckFlag =
+                    sendAckNum =
+                    sendSeqNum +=
+                    sendFinFlag =
+                    sendRstFlag =
+                    sendData = ""
+
+                    // T-PDU erzeugen und senden
+                    sendTpdu()
+
+                    // Neuen Zustand der FSM erzeugen
+                    fsm.fire()
+
+                    // Hergestellte Verbindung signalisieren
+                    notifyOpen()
+                    break
+
+                case (Event.E_SEND_SYN_ACK):
+                    // SYN+ACK empfangen, ACK senden
+                    sendSynFlag =
+                    sendAckFlag =
+                    sendAckNum =
+                    sendSeqNum +=
+                    sendFinFlag =
+                    sendRstFlag =
+                    sendData = ""
+
+                    // T-PDU erzeugen und senden
+                    sendTpdu()
+
+                    // Neuen Zustand der FSM erzeugen
+                    fsm.fire()
+
+                    // Hergestellte Verbindung signalisieren
+                    notifyOpen()
+                    break
 
             // ----------------------------------------------------------
             // Aktiver Verbindungsabbau
@@ -460,7 +508,7 @@ class TcpLayer {
             // ACK empfangen
 
                 case (State.S_RCVD_ACK):
-                    // ACK ohne Daten empfangen
+                    // TODO: ACK ohne Daten empfangen
                     // ...
 
                     // Neuen Zustand der FSM erzeugen

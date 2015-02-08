@@ -87,17 +87,17 @@ class UdpLayer {
 
             Utils.writeLog("UdpLayer", "receive", "uebernimmt  von IP: ${iu_idu}", 3)
 
+            //Hier z.B. noch auf richtigen Zielport testen
+            if (ownPort == u_pdu.dstPort) {
 
-            //TODO: Hier z.B. noch auf richtigen Zielport testen
-            // ...
+                ua_idu = new UA_IDU()
+                ua_idu.sdu = u_pdu.sdu
+                ua_idu.srcIpAddr = iu_idu.srcIpAddr
+                ua_idu.srcPort = u_pdu.srcPort
 
-            ua_idu = new UA_IDU()
-            ua_idu.sdu = u_pdu.sdu
-            ua_idu.srcIpAddr = iu_idu.srcIpAddr
-            ua_idu.srcPort = u_pdu.srcPort
-
-            // Daten an Anwendung uebergeben
-            toAppQ.put(ua_idu)
+                // Daten an Anwendung uebergeben
+                toAppQ.put(ua_idu)
+            }
         }
     }
 

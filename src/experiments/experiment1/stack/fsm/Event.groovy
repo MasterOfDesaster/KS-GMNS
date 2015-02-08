@@ -7,8 +7,14 @@ class Event {
     /** Verbindungseröffnung einleiten*/
     static final int E_CONN_REQ = 100
 
+    /** Warten auf Verbindungsschluss */
+    static final int E_WAIT_REQ = 105
+
     /** SYN senden */
     static final int E_SEND_SYN = 110
+
+    /** SYN empfangen */
+    static final int E_RCVD_SYN
 
     /** FIN senden */
     static final int E_SEND_FIN = 130
@@ -16,17 +22,29 @@ class Event {
     /** Daten senden */
     static final int E_SEND_DATA = 150
 
+    /** SYN ACK senden */
+    static final int E_SEND_SYN_ACK = 155
+
     /** SYN+ACK wurde empfangen */
     static final int E_RCVD_SYN_ACK = 160
 
+    /** SYN+ACK+ACK wurde empfangen*/
+    static final int E_RCVD_SYN_ACK_ACK = 165
+
     /** Daten wurden empfangen */
     static final int E_RCVD_DATA = 170
+
+    /**FIN ACK ACK wurde empfangen*/
+    static final int E_RCVD_FIN_ACK_ACK = 175
 
     /** ACK wurde empfangen */
     static final int E_RCVD_ACK = 180
 
     /** ACK zur Verbindungseröffnung wurde gesendet */
     static final int E_SYN_ACK_ACK_SENT = 190
+
+    /** FIN ACK gesendet*/
+    static final int E_FIN_ACK_SENT = 200
 
     /** FIN+ACK wurde empfangen */
     static final int E_FIN_ACK_ACK_SENT = 210

@@ -144,7 +144,7 @@ Das Objekt ${->name} wurde angefragt!
                     case "daten":
                         // hier langen HTTP-body (einige kByte) erzeugen um lang anhaltende Übertragung
                         // zu erreichen
-                        data = "Das hier sind die Daten die gesendet werden"
+                        data = "Blablablubberblubberfaselblablablubberblubberfaselblablablubberblubberfaselblablablubberblubberfasel"
 
                         dataLength = data.size()
                         //reply = reply1 + data // dabei wird dataLength in reply1 eingetrage
