@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="961e57af-ce56-45fb-b0d5-2c8a7552031a" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/experiments/experiment1/stack/fsm/State.groovy" afterPath="$PROJECT_DIR$/src/experiments/experiment1/stack/fsm/State.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/experiments/experiment1/stack/layer/TcpLayer.groovy" afterPath="$PROJECT_DIR$/src/experiments/experiment1/stack/layer/TcpLayer.groovy" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="KS_Praktikum.iws" />
@@ -41,21 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Stack.groovy" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/stack/Stack.groovy">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.21077845" vertical-offset="1744" max-vertical-offset="4545">
-              <caret line="142" column="0" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="State.groovy" pinned="false" current-in-tab="false">
+      <file leaf-file-name="State.groovy" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/stack/fsm/State.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="22" max-vertical-offset="975">
-              <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
+            <state vertical-scroll-proportion="0.7252358" vertical-offset="135" max-vertical-offset="1005">
+              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -944,7 +933,13 @@
       <option name="project" value="LOCAL" />
       <updated>1423433397422</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="TCP Layer Update">
+      <created>1423523225367</created>
+      <option name="number" value="00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1423523225367</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -1038,7 +1033,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="Name Server und Config Update" />
     <MESSAGE value="Schritt 3 fast vollständig, Client verbindet sich dann aber nicht mehr mit Server danach" />
     <MESSAGE value="removed while, Schritt 3 funktioniert nun vollständig" />
     <MESSAGE value="Schritt 4, Problem: Mac Adresse wird sowohl bei src als auch bei dst vom Client genommen" />
@@ -1063,7 +1057,8 @@
     <MESSAGE value="Distance Vector Routing von Marcel" />
     <MESSAGE value="TODO's für Schritt 7" />
     <MESSAGE value="TCP vorläufiges Update" />
-    <option name="LAST_COMMIT_MESSAGE" value="TCP vorläufiges Update" />
+    <MESSAGE value="TCP Layer Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="TCP Layer Update" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1420,14 +1415,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/stack/fsm/State.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="22" max-vertical-offset="975">
-          <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/common/fsm/Grammer.groovy">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="207" max-vertical-offset="750">
@@ -1456,8 +1443,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/stack/Stack.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.21077845" vertical-offset="1744" max-vertical-offset="4545">
+        <state vertical-scroll-proportion="0.0" vertical-offset="1744" max-vertical-offset="4545">
           <caret line="142" column="0" selection-start-line="142" selection-start-column="0" selection-end-line="142" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/stack/fsm/State.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.7252358" vertical-offset="135" max-vertical-offset="1005">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
           <folding />
         </state>
       </provider>
