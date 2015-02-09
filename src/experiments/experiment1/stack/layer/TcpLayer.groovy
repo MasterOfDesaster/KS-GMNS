@@ -329,6 +329,7 @@ class TcpLayer {
 
                 case (State.S_SEND_SYN):
                     // Verbindungsaufbau beginnen
+                    Utils.writeLog("TcpLayer", "starte", "Verbindungsaufbau", 2)
                     sendAckNum = 0
                     sendSeqNum = new Random().nextInt(6000) + 1
 
@@ -340,6 +341,7 @@ class TcpLayer {
                     sendData = ""
 
                     // T-PDU erzeugen und senden
+                    Utils.writeLog("TcpLayer", "sendet", "Sende SYN mit Seq-Nr.: ${sendSeqNum}, ACK-Nr.: ${sendAckNum} ", 2)
                     sendTpdu()
 
                     // Neuen Zustand der FSM erzeugen
@@ -347,7 +349,9 @@ class TcpLayer {
                     break
 
                 case (State.S_SEND_SYN_ACK_ACK):
-                    // SYN+ACK empfangen, ACK senden
+                    // SYN+ACK empfangen
+                    Utils.writeLog("TcpLayer", "empfange", "Seq-Nr.: ${recvSeqNum} und ACK-Nr.: ${recvAckNum}")
+                    // ACK senden
                     sendSynFlag = false
                     sendAckFlag = true
                     sendAckNum = recvSeqNum + 1
@@ -357,6 +361,7 @@ class TcpLayer {
                     sendData = ""
 
                     // T-PDU erzeugen und senden
+                    Utils.writeLog("TcpLayer", "sendet", "SYN-ACK-ACK mit Seq-Nr.: ${sendSeqNum}, ACK-Nr.: ${sendAckNum}", 2)
                     sendTpdu()
 
                     // Neuen Zustand der FSM erzeugen
@@ -367,44 +372,31 @@ class TcpLayer {
                     break
 
             // ----------------------------------------------------------
-            // TODO: Passiver Verbindungsaufbau
+            // Passiver Verbindungsaufbau
                 case (State.S_SEND_SYN_ACK):
                     // SYN+ACK empfangen, ACK senden
-                    sendSynFlag =
-                    sendAckFlag =
-                    sendAckNum =
-                    sendSeqNum +=
-                    sendFinFlag =
-                    sendRstFlag =
+                    sendSynFlag = true
+                    sendAckFlag = true
+                    sendAckNum = recvSeqNum + 1
+                    sendSeqNum += new Random().nextInt(6000) + 1
+                    sendFinFlag = false
+                    sendRstFlag = false
                     sendData = ""
 
                     // T-PDU erzeugen und senden
+                    Utils.writeLog("TcpLayer", "sendet", "SYN-ACK mit Seq-Nr.: ${sendSeqNum}, ACK-Nr.: ${sendAckNum}")
                     sendTpdu()
 
                     // Neuen Zustand der FSM erzeugen
-                    fsm.fire()
-
-                    // Hergestellte Verbindung signalisieren
-                    notifyOpen()
+                    fsm.fire(Event.E_SEND_SYN_ACK)
                     break
 
-                case (Event.E_SEND_SYN_ACK):
-                    // SYN+ACK empfangen, ACK senden
-                    sendSynFlag =
-                    sendAckFlag =
-                    sendAckNum =
-                    sendSeqNum +=
-                    sendFinFlag =
-                    sendRstFlag =
-                    sendData = ""
-
-                    // T-PDU erzeugen und senden
-                    sendTpdu()
-
+                case (State.S_RCVD_SYN_ACK_ACK):
                     // Neuen Zustand der FSM erzeugen
-                    fsm.fire()
+                    fsm.fire(Event.E_RCVD_SYN_ACK_ACK)
 
                     // Hergestellte Verbindung signalisieren
+                    Utils.writeLog("TcpLayer", "stellte", "Verbindung her", 2)
                     notifyOpen()
                     break
 
@@ -413,6 +405,7 @@ class TcpLayer {
 
                 case (State.S_SEND_FIN):
                     // Verbindungsabbau beginnen
+                    Utils.writeLog("TcpLayer", "startet", "Verbindungsabbau", 2)
                     sendAckFlag = true
                     sendSynFlag = false
                     sendFinFlag = true
@@ -421,6 +414,7 @@ class TcpLayer {
                     sendData = ""
 
                     // T-PDU erzeugen und senden
+                    Utils.writeLog("TcpLayer", "sende", "FIN mit Seq-Nr.: ${sendSeqNum}, ACK-Nr.: ${sendAckNum}")
                     sendTpdu()
 
                     // Neuen Zustand der FSM erzeugen
@@ -428,7 +422,9 @@ class TcpLayer {
                     break
 
                 case (State.S_SEND_FIN_ACK_ACK):
-                    // FIN+ACK empfangen, ACK senden
+                    // FIN+ACK empfangen
+                    Utils.writeLog("TcpLayer", "empfange", "Seq-Nr.: ${recvSeqNum}, ACK-Nr.: ${recvAckNum}", 2)
+                    // ACK senden
                     sendAckFlag = true
                     sendFinFlag = false
                     sendSeqNum += 1
@@ -436,18 +432,48 @@ class TcpLayer {
                     sendData = ""
 
                     // ACK nach FIN+ACK senden
+                    Utils.writeLog("TcpLayer", "sendet", "FIN-ACK-ACK mit Seq-Nr.: ${sendSeqNum}, ACK-Nr.: ${sendAckNum}", 2)
                     sendTpdu()
 
                     // Neuen Zustand der FSM erzeugen
                     fsm.fire(Event.E_FIN_ACK_ACK_SENT)
 
                     // Ende der Verbindung signalisieren
+                    Utils.writeLog("TcpLayer", "beendet", "Verbindungsabbau", 2)
                     notifyClose()
                     break
 
             // ----------------------------------------------------------
-            // TODO: Passiver Verbindungsabbau
-            // ...
+            // Passiver Verbindungsabbau
+                case(State.S_SEND_FIN_ACK):
+                    //Verbindungsabbau beginnen
+                    Utils.writeLog("TcpLayer", "startet", "Verbindungsabbau", 2)
+                    sendAckFlag = true
+                    sendSynFlag = false
+                    sendFinFlag = true
+                    sendRstFlag = false
+                    sendWindSize = 0
+                    sendData = ""
+
+                    sendSeqNum = recvAckNum
+                    sendAckNum = recvSeqNum + 1
+
+                    // ACK nach FIN senden
+                    Utils.writeLog("TcpLayer", "sendet", "FIN-ACK mit Seq-Nr.: ${sendSeqNum}, ACK-Nr.: ${sendAckNum}")
+                    sendTpdu()
+
+                    // Neuen Zustand der FSM erzeugen
+                    fsm.fire(Event.E_FIN_ACK_SENT)
+                    break
+
+                case(State.S_RCVD_FIN_ACK_ACK):
+                    // Neuen Zustand der FSM erzeugen
+                    fsm.fire(Event.E_RCVD_FIN_ACK_ACK)
+
+                    //Ende der Verbindung signalisieren
+                    Utils.writeLog("TcpLayer", "beendet", "Verbindungsabbau", 2)
+                    notifyClose()
+                    break
 
             // ----------------------------------------------------------
             // Daten empfangen
@@ -471,6 +497,7 @@ class TcpLayer {
 
                         // Daten uebernehmen
                         ta_idu.sdu = recvData
+                        Utils.writeLog("TcpLayer", "receive", "Daten mit Seq-Nr.: ${recvSeqNum}, ACK-Nr.: ${recvAckNum}, Datenbytes: ${recvData.bytes.size()}", 2)
 
                         // IDU an Anwendung übergeben
                         toAppQ.put(ta_idu)
@@ -479,6 +506,20 @@ class TcpLayer {
 
                         // ACK senden
                         sendTpdu()
+                    }else if(recvSeqNum>sendAckNum){
+                        //Pakete verloren gegangen, sende D-ACK
+                        sendAckFlag = true
+                        sendFinFlag = false
+                        sendRstFlag = false
+                        sendSynFlag = false
+                        sendData =""
+
+                        Utils.writeLog("TcpLayer", "sendet", "Duplicate ACK aufgrund verlorener Pakete mit Seq-Nr.: ${sendSeqNum}, ACK-Nr.: ${sendAckNum}", 2)
+
+                        //ACK senden
+                        sendTpdu()
+                    }else{
+                        Utils.writeLog("TcpLayer", "receive", "unbekannte Pakete mit Seq-Nr.: ${recvSeqNum}, ACK-Nr.: ${recvAckNum} - erwartet: Seq-Nr.: ${sendSeqNum}, ACK-Nr.: ${sendAckNum}", 2)
                     }
 
                     // Neuen Zustand der FSM erzeugen
@@ -508,8 +549,11 @@ class TcpLayer {
             // ACK empfangen
 
                 case (State.S_RCVD_ACK):
-                    // TODO: ACK ohne Daten empfangen
-                    // ...
+                    if(recvSeqNum==sendAckNum){
+                        sendAckNum = recvSeqNum
+                        Utils.writeLog("TcpLayer", "empfängt", "ACK mit Seq-Nr.: ${sendSeqNum} und ACK-Nr.: ${sendAckNum}")
+
+                    }
 
                     // Neuen Zustand der FSM erzeugen
                     fsm.fire(Event.E_READY)
@@ -549,8 +593,8 @@ class TcpLayer {
         // Absendendes Protokoll eintragen
         ti_idu.protocol = IpLayer.PROTO_TCP
 
-        // TODO: IDU in Warteschlange fuer Sendewiederholungen eintragen
-        // insertWaitQ(ti_idu)
+        // IDU in Warteschlange fuer Sendewiederholungen eintragen
+        insertWaitQ(ti_idu)
 
         // Daten an IP-Schicht uebergeben
         toIpQ.put(ti_idu)
