@@ -594,7 +594,9 @@ class TcpLayer {
         ti_idu.protocol = IpLayer.PROTO_TCP
 
         // IDU in Warteschlange fuer Sendewiederholungen eintragen
-        insertWaitQ(ti_idu)
+        if(!sendAckFlag || sendSynFlag || sendFinFlag || sendRstFlag || sendData!="") {
+            insertWaitQ(ti_idu)
+        }
 
         // Daten an IP-Schicht uebergeben
         toIpQ.put(ti_idu)
