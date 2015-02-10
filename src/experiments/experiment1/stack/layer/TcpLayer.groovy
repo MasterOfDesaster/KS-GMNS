@@ -634,7 +634,7 @@ class TcpLayer {
      * Fuegt eine mit timeout an IP zu uebergebene IDU in die Sendewarteschlange ein
      * @param idu
      */
-    void insertWaitQ(Map idu) {
+    void insertWaitQ(TRI_IDU idu) {
         synchronized (sendWaitQ) {
             sendWaitQ.add([timeOut: timeOut, idu: idu])
         }
