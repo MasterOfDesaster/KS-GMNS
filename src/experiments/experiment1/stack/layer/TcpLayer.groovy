@@ -563,7 +563,7 @@ class TcpLayer {
 
                     // Daten senden
                     sendTpdu()
-                    Utils.writeLog("TcpLazer","send","Schicke Daten: ACK-Nr.:${sendAckNum} Seq-Nr.:${sendSeqNum} Datenbytes:${sendData.bytes.size()}",2)
+                    Utils.writeLog("TcpLayer","send","Schicke Daten: ACK-Nr.:${sendAckNum} Seq-Nr.:${sendSeqNum} Datenbytes:${sendData.bytes.size()}",2)
                 // Bei UTF-8 Encoding besser: sendSeqNum += sendData.bytes.size()
                     sendSeqNum += sendData.bytes.size()
 
