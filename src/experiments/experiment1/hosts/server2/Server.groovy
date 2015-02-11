@@ -153,34 +153,22 @@ Das Objekt ${->name} wurde angefragt!
                                 String temp = reply2 // name wird eingetragen
                                 dataLength = reply2.bytes.size()
                                 reply = reply1 + temp // dabei wird dataLength in reply1 eingetragen
-                                break
-
-                            case "daten":
-                                // hier langen HTTP-body erzeugen um lang anhaltende Übertragung zu erreichen
-                                data = "abcdefghi1abcdefghi2abcdefghi3abcdefghi4abcdefghi5abcdefghi6abcdefghi7abcdefghi8abcdefghi9"
-
-                                dataLength = data.bytes.size()
-                                reply = reply1 + data // dabei wird dataLength in reply1 eingetragen
-                                replyData = data.split("(?<=\\G.{10})")
-                                for(int i = 0; i < replyData.length; i++)
-                                    Utils.writeLog("Server", "test", "replyData[" + i + "] = " + replyData[i], 11)
-                                break
-                        }
-
-                        Utils.writeLog("Server", "server", "sendet: ${new String(apdu)}", 11)
-
-                        // Antwort senden
-
-                        switch(name) {
-                            case "index.html":
                                 stack.tcpSend([connId: connId, sdu: reply])
+                                break
 
                             case "daten":
-                                for(int i = 0; i <= replyData.length; i++) {
-                                    stack.tcpSend([connId: connId, sdu: replyData[i]])
-                                    Utils.writeLog("Server", "server", "sendet als paket: " + replyData[1], 11)
+                                dataLength = data.bytes.size()
+                                stack.tcpSend([connId: connId, sdu: reply1])
+                                // hier langen HTTP-body erzeugen um lang anhaltende Übertragung zu erreichen
+
+                                for(int i = 0; i < 30; i++) {
+                                    String data = "abcdefghi1abcdefghi2abcdefghi3abcdefghi4abcd"
+                                    Utils.writeLog("Server", "test", "replyData[" + i + "] = " + data, 11)
+                                    stack.tcpSend([connId: connId, sdu: data])
                                 }
+                                break
                         }
+
                     }
                 } // while
             }
