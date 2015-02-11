@@ -107,63 +107,70 @@ Das Objekt ${->name} wurde angefragt!
             Map aidu = stack.tcpListen()
 
             // Verbindungskennung merken
-            connId = aidu.connId
 
-            while (run) {
+            if(aidu== null){
+                sleep(1000)
+            }else {
 
-                // Auf Empfang warten
-                Map tidu = stack.tcpReceive(connId: connId)
 
-                // Es wurden längere Zeit keine Daten empfangen oder die Datenlänge ist 0
-                // -> die TCP-Verbindung wird als geschlossen angenommen
-                if (!tidu.sdu)
-                // Nein, innere while-Schleife abbrechen
-                    break
+                connId = aidu.connId
 
-                // A-PDU uebernehmen
-                apdu = tidu.sdu
+                while (run) {
 
-                Utils.writeLog("Server", "server", "empfängt: ${new String(apdu)}", 1)
+                    // Auf Empfang warten
+                    Map tidu = stack.tcpReceive(connId: connId)
 
-                // Protokollkopf holen
-                data = new String(apdu)
+                    // Es wurden längere Zeit keine Daten empfangen oder die Datenlänge ist 0
+                    // -> die TCP-Verbindung wird als geschlossen angenommen
+                    if (!tidu.sdu)
+                    // Nein, innere while-Schleife abbrechen
+                        break
 
-                // Parsen des HTTP-Kommandos
-                matcher = (data =~ /GET\s*\/(.*?)\s*HTTP\/1\.1/)
+                    // A-PDU uebernehmen
+                    apdu = tidu.sdu
 
-                name = ""
-                // Wurde das Header-Feld gefunden?
-                if (matcher) {
-                    // Ja
-                    // Name des zu liefernden Objekts
-                    name = (matcher[0] as List<String>)[1]
+                    Utils.writeLog("Server", "server", "empfängt: ${new String(apdu)}", 1)
 
-                    String reply = ""
+                    // Protokollkopf holen
+                    data = new String(apdu)
 
-                    switch (name) {
-                        case "index.html":
-                            // Antwort erzeugen
-                            String temp = reply2 // name wird eingetragen
-                            dataLength = reply2.size()
-                            reply = reply1 + temp // dabei wird dataLength in reply1 eingetragen
-                            break
+                    // Parsen des HTTP-Kommandos
+                    matcher = (data =~ /GET\s*\/(.*?)\s*HTTP\/1\.1/)
 
-                        case "daten":
-                            // hier langen HTTP-body erzeugen um lang anhaltende Übertragung zu erreichen
-                            data = "Blablablubberblubberfaselblablablubberblubberfaselblablablubberblubberfaselblablablubberblubberfasel"
+                    name = ""
+                    // Wurde das Header-Feld gefunden?
+                    if (matcher) {
+                        // Ja
+                        // Name des zu liefernden Objekts
+                        name = (matcher[0] as List<String>)[1]
 
-                            dataLength = data.size()
-                            reply = reply1 + data // dabei wird dataLength in reply1 eingetragen
-                            break
+                        String reply = ""
+
+                        switch (name) {
+                            case "index.html":
+                                // Antwort erzeugen
+                                String temp = reply2 // name wird eingetragen
+                                dataLength = reply2.bytes.size()
+                                reply = reply1 + temp // dabei wird dataLength in reply1 eingetragen
+                                break
+
+                            case "daten":
+                                // hier langen HTTP-body erzeugen um lang anhaltende Übertragung zu erreichen
+                                data = "Blablablubberblubberfaselblablablubberblubberfaselblablablubberblubberfaselblablablubberblubberfasel"
+
+                                dataLength = data.bytes.size()
+                                reply = reply1 + data // dabei wird dataLength in reply1 eingetragen
+                                break
+                        }
+
+                        Utils.writeLog("Server", "server", "sendet: ${new String(apdu)}", 11)
+
+                        // Antwort senden
+                        stack.tcpSend([connId: connId, sdu: reply])
                     }
+                } // while
 
-                    Utils.writeLog("Server", "server", "sendet: ${new String(apdu)}", 11)
-
-                    // Antwort senden
-                    stack.tcpSend([connId: connId, sdu: reply])
-                }
-            } // while
-        } // while
+            } } // while
     }
 }
 

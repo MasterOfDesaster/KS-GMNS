@@ -494,7 +494,7 @@ class TcpLayer {
 
                 case(State.S_RCVD_FIN_ACK_ACK):
                     // Neuen Zustand der FSM erzeugen
-                    fsm.fire(Event.E_RCVD_FIN_ACK_ACK)
+                    fsm.fire(Event.E_DISCONN_CON)
 
                     //Ende der Verbindung signalisieren
                     Utils.writeLog("TcpLayer", "beendet", "Verbindungsabbau", 2)
@@ -563,8 +563,8 @@ class TcpLayer {
 
                     // Daten senden
                     sendTpdu()
-
-                    // Bei UTF-8 Encoding besser: sendSeqNum += sendData.bytes.size()
+                    Utils.writeLog("TcpLazer","send","Schicke Daten: ACK-Nr.:${sendAckNum} Seq-Nr.:${sendSeqNum} Datenbytes:${sendData.bytes.size()}",2)
+                // Bei UTF-8 Encoding besser: sendSeqNum += sendData.bytes.size()
                     sendSeqNum += sendData.bytes.size()
 
                     // Neuen Zustand der FSM erzeugen
@@ -758,6 +758,7 @@ class TcpLayer {
             connId = 1
             conn = [connId: connId, srcIpAddr: dstIpAddr, srcPort: dstPort]
             Utils.writeLog("TcpLayer", "receiving", "Verbindung wurde geöffnet: ${conn}", 2)
+
         }
         return conn
     }

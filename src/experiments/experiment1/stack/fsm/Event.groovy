@@ -35,7 +35,7 @@ class Event {
     static final int E_RCVD_DATA = 170
 
     /**FIN ACK ACK wurde empfangen*/
-    static final int E_RCVD_FIN_ACK_ACK = 175
+//    static final int E_RCVD_FIN_ACK_ACK = 175
 
     /** ACK wurde empfangen */
     static final int E_RCVD_ACK = 180
