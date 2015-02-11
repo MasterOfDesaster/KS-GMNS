@@ -107,7 +107,7 @@ class TcpLayer {
     boolean sendAckFlag
     boolean sendSynFlag
     boolean sendFinFlag
-    boolean sendRstFlag
+    boolean sendRstFlag = false
     int sendSeqNum
     int sendAckNum
     int sendWindSize
@@ -119,7 +119,7 @@ class TcpLayer {
     boolean recvAckFlag
     boolean recvFinFlag
     boolean recvSynFlag
-    boolean recvRstFlag
+    boolean recvRstFlag = false
     int recvWindSize
     String recvData
     //------------------------------------------------------------------------------
@@ -166,9 +166,9 @@ class TcpLayer {
 
             // Passiver Verbindungsabbau
             [on: Event.E_RCVD_FIN, from: State.S_READY, to: State.S_SEND_FIN_ACK],
-            [on: Event.E_FIN_ACK_SENT, from: State.S_SEND_FIN_ACK, to:State.S_WAIT_FIN_ACK_ACK],
+            [on: Event.E_SEND_FIN_ACK, from: State.S_SEND_FIN_ACK, to:State.S_WAIT_FIN_ACK_ACK],
             [on: Event.E_RCVD_ACK, from: State.S_WAIT_FIN_ACK_ACK, to: State.S_RCVD_FIN_ACK_ACK],
-            [on: Event.E_RCVD_FIN_ACK_ACK, from: State.S_RCVD_FIN_ACK_ACK, to: State.S_IDLE]
+            [on: Event.E_DISCONN_CON, from: State.S_RCVD_FIN_ACK_ACK, to: State.S_IDLE]
         ]
 
     /** Die Finite Zustandsmaschine. */
@@ -225,8 +225,8 @@ class TcpLayer {
                 //Entfernen von quittierten Daten aus der Warteschlange
                 // fuer Sendewiederholungen
                 if (t_pdu.ackFlag) {
-                    removeWaitQ(recvAckNum)
-                    Utils.writeLog("TcpLayer", "receive", "löscht Pakete mit der Nummer: ${recvAckNum}", 2)
+                    removeWaitQ(t_pdu.ackNum)
+                    Utils.writeLog("TcpLayer", "receive", "löscht Pakete mit der Nummer: ${t_pdu.ackNum}", 2)
                 }
 
                 // Analysieren einer empfangenen TCP-PDU
@@ -251,6 +251,8 @@ class TcpLayer {
                 int event = 0
                 // Ereignis bestimmen
                 switch (true) {
+                    case (recvRstFlag): Utils.writeLog("TcpLayer", "reset", "Verbindung wird abgebrochen", 2); fsm.currentState = State.S_IDLE; break
+                    case (recvSynFlag && !recvAckFlag): event = Event.E_RCVD_SYN; break
                     case (recvFinFlag): event = Event.E_RCVD_FIN; break
                     case (recvSynFlag && recvAckFlag): event = Event.E_RCVD_SYN_ACK; break
                     case (recvAckFlag && t_pdu.sdu.size() == 0): event = Event.E_RCVD_ACK; break
@@ -260,6 +262,8 @@ class TcpLayer {
                 if (event) {
                     // Neuen Zustand behandeln
                     handleStateChange(event)
+                }else{
+                    Utils.writeLog("TcpLayer", "blockiert", "falscher Port, dstPort: ${t_pdu.dstPort}, ownPort: ${ownPort}")
                 }
             }
         }
@@ -300,9 +304,29 @@ class TcpLayer {
                     break
 
                 case DATA:
-                    // Daten senden
-                    sendData = at_idu.sdu // Anwendungsdaten übernehmen
-                    handleStateChange(Event.E_SEND_DATA)
+                    int maxSegmentSize = MSS
+                    int current_start_pos = 0
+                    int current_end_pos = maxSegmentSize
+
+                    if(at_idu.length() <= maxSegmentSize){
+                        // Daten senden
+                        sendData = at_idu.sdu // Anwendungsdaten übernehmen
+                        handleStateChange(Event.E_SEND_DATA)
+                    }else{
+                        while(current_start_pos<at_idu.sdu.length()){
+                            //sende Segment
+                            sendData = at_idu.sdu[current_start_pos..current_end_pos]
+                            Utils.writeLog("TcpLayer", "send", "Segment: Laenge:${sendData.length()} Byte:${sendData.bytes.size()} Gesamtlaenge:${at_idu.sdu.length()} Gesamtbytes:${at_idu.sdu.bytes.size()} Daten:${sendData}", 2)
+
+                            current_start_pos += maxSegmentSize
+                            current_end_pos += maxSegmentSize
+
+                            if (current_end_pos > at_idu.sdu.length()) {
+                                current_end_pos = at_idu.sdu.length()-1
+                            }
+                        }
+                        handleStateChange(Event.E_SEND_DATA)
+                    }
                     break
             }
         }

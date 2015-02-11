@@ -44,7 +44,7 @@ class Event {
     static final int E_SYN_ACK_ACK_SENT = 190
 
     /** FIN ACK gesendet*/
-    static final int E_FIN_ACK_SENT = 200
+    static final int E_SEND_FIN_ACK = 200
 
     /** FIN+ACK wurde empfangen */
     static final int E_FIN_ACK_ACK_SENT = 210
@@ -57,6 +57,9 @@ class Event {
 
     /** Daten wurden gesendet */
     static final int E_DATA_SENT = 240
+
+    /** Verbindung wird getrennt */
+    static final int E_DISCONN_CON = 250
 
     /** FIN empfangen */
     static final int E_RCVD_FIN = 280
