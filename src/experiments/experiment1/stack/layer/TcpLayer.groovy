@@ -306,43 +306,20 @@ class TcpLayer {
                     break
 
                 case DATA:
-
-                    int current_start_pos = 0
-                    int current_end_pos = MSS
-                    int dataLength = at_idu.sdu.size()
-
-                    //System.out.println("datalength: " + dataLength + ", MSS: " + MSS)
-                    if(dataLength < MSS){
-                        // Daten senden
-                        Utils.writeLog("TcpLayer", "send", "Segment MSS Laenge: Laenge:${sendData.length()} Byte:${sendData.bytes.size()} Gesamtlaenge:${at_idu.sdu.length()} Gesamtbytes:${at_idu.sdu.bytes.size()} Daten:${sendData}", 2)
-                        sendData = at_idu.sdu // Anwendungsdaten übernehmen
-                        handleStateChange(Event.E_SEND_DATA)
-                        break
-                    }else{
-                        while(current_start_pos<dataLength){
-                        if (current_end_pos > dataLength) {
-                            current_end_pos = dataLength-1
-                        }
-                            //sende Segment
-                            sendData = at_idu.sdu[current_start_pos..current_end_pos]
-                            Utils.writeLog("TcpLayer", "send", "Segment: Laenge:${sendData.length()} Byte:${sendData.bytes.size()} Gesamtlaenge:${at_idu.sdu.length()} Gesamtbytes:${at_idu.sdu.bytes.size()} Daten:${sendData}", 2)
-
-                            current_start_pos += MSS
-                            current_end_pos += MSS
-                            //System.out.println("atidu: " + at_idu.sdu + ", currentstartpos: " + current_start_pos + ", currentendpos: " + current_end_pos)
-                            handleStateChange(Event.E_SEND_DATA)
-                    }
-                    }
+                    // Daten senden
+                    sendData = at_idu.sdu
+                     // Anwendungsdaten übernehmen
+                    handleStateChange(Event.E_SEND_DATA)
                     break
-            }
-        }
-    }
+             }
+         }
+     }
 
-    //------------------------------------------------------------------------------
-    /**
-     * Behandelt jeweils einen neuen Zustand der Zustandsmaschine.
-     * @param event das neue Ereignis
-     */
+     //------------------------------------------------------------------------------
+     /**
+      * Behandelt jeweils einen neuen Zustand der Zustandsmaschine.
+      * @param event das neue Ereignis
+      */
     synchronized void handleStateChange(int event) {
 
         // Zustandsübergang bestimmen

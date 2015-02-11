@@ -161,11 +161,9 @@ Das Objekt ${->name} wurde angefragt!
                                 stack.tcpSend([connId: connId, sdu: reply1])
                                 // hier langen HTTP-body erzeugen um lang anhaltende Übertragung zu erreichen
 
-                                for(int i = 0; i < 30; i++) {
                                     String data = "abcdefghi1abcdefghi2abcdefghi3abcdefghi4abcd"
-                                    Utils.writeLog("Server", "test", "replyData[" + i + "] = " + data, 11)
+                                    //Utils.writeLog("Server", "test", "replyData[" + i + "] = " + data, 11)
                                     stack.tcpSend([connId: connId, sdu: data])
-                                }
                                 break
                         }
 
