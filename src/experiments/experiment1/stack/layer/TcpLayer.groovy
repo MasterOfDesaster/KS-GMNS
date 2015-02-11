@@ -310,7 +310,7 @@ class TcpLayer {
                     int current_start_pos = 0
                     int current_end_pos = maxSegmentSize
 
-                    if(at_idu.length() <= maxSegmentSize){
+                    if(at_idu.sdu.length() <= maxSegmentSize){
                         // Daten senden
                         sendData = at_idu.sdu // Anwendungsdaten übernehmen
                         handleStateChange(Event.E_SEND_DATA)

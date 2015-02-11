@@ -282,7 +282,9 @@ class LinkLayer {
                 // Besser waere es einen eigenen Thread auszufueren
                 Thread.start {
                     receiveARP()
+
                 }
+                sleep(1000)
             }
 
             macFrame.sdu = il_idu.sdu // PDU entnehmen

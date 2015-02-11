@@ -57,8 +57,7 @@ environments {
             ownPort = 5100
 
             // Standard-Router
-            routerIpAddr = "192.168.1.1"
-
+            defaultRouter = "192.168.1.1"
             // IP-Adresse des Nameservers
             nameServerIpAddr = "192.168.1.11"
 
