@@ -306,30 +306,54 @@ class TcpLayer {
                     break
 
                 case DATA:
-                    int maxSegmentSize = MSS
-                    int current_start_pos = 0
-                    int current_end_pos = maxSegmentSize
 
-                    if(at_idu.sdu.length() <= maxSegmentSize){
+                    int current_start_pos = 0
+                    int current_end_pos = MSS
+                    int dataLength = at_idu.sdu.size()
+
+                    System.out.println("datalength: " + dataLength + ", MSS: " + MSS)
+                    if(dataLength < MSS){
                         // Daten senden
                         sendData = at_idu.sdu // Anwendungsdaten übernehmen
                         handleStateChange(Event.E_SEND_DATA)
                     }else{
-                        while(current_start_pos<at_idu.sdu.length()){
+                        while(current_start_pos<dataLength){
                             //sende Segment
                             sendData = at_idu.sdu[current_start_pos..current_end_pos]
                             Utils.writeLog("TcpLayer", "send", "Segment: Laenge:${sendData.length()} Byte:${sendData.bytes.size()} Gesamtlaenge:${at_idu.sdu.length()} Gesamtbytes:${at_idu.sdu.bytes.size()} Daten:${sendData}", 2)
 
-                            current_start_pos += maxSegmentSize
-                            current_end_pos += maxSegmentSize
+                            current_start_pos += MSS
+                            current_end_pos += MSS
+                            System.out.println("atidu: " + at_idu.sdu + ", currentstartpos: " + current_start_pos + ", currentendpos: " + current_end_pos)
 
-                            if (current_end_pos > at_idu.sdu.length()) {
-                                current_end_pos = at_idu.sdu.length()-1
+                            if (current_end_pos > dataLength) {
+                                current_end_pos = dataLength-1
                             }
                         }
                         handleStateChange(Event.E_SEND_DATA)
                     }
                     break
+
+                    /*
+                    String dataToSend = at_idu.sdu
+                    int dataLength = MSS
+
+                    Utils.writeLog("TcpLayer", "test", "at_idu.sdu: " + at_idu.sdu, 2)
+                    while(dataToSend.length() > 0) {
+                        if(dataToSend.length() <= dataLength) {
+                            sendData = dataToSend
+                            dataToSend = ""
+                            Utils.writeLog("TcpLayer", "send", "Segment: Laenge:${sendData.length()} Byte:${sendData.bytes.size()} Gesamtlaenge:${at_idu.sdu.length()} Gesamtbytes:${at_idu.sdu.bytes.size()} Daten:${sendData}", 2)
+                            handleStateChange(Event.E_SEND_DATA)
+                        } else {
+                            sendData = dataToSend.substring(0, dataLength)
+                            dataToSend = dataToSend.substring(dataLength)
+                            Utils.writeLog("TcpLayer", "test", "sendData: " + sendData + ", dataToSend: " + dataToSend + ", at_idu.sdu: " + at_idu.sdu, 2)
+                            Utils.writeLog("TcpLayer", "send", "Segment: Laenge:${sendData.length()} Byte:${sendData.bytes.size()} Gesamtlaenge:${at_idu.sdu.length()} Gesamtbytes:${at_idu.sdu.bytes.size()} Daten:${sendData}", 2)
+                        }
+                    }
+                    break
+                    */
             }
         }
     }

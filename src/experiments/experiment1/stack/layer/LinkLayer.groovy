@@ -185,7 +185,7 @@ class LinkLayer {
                         break
                 }
             } else {
-                System.out.println("Macadressen stimmen nicht überein.")
+                Utils.writeLog("LinkLayer", "arp", "Mac-Adresse nicht von Arp-Request gesucht", 5)
             }
         }
     }

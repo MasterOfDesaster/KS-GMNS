@@ -94,6 +94,7 @@ Das Objekt ${->name} wurde angefragt!
         // Netzwerkstack initialisieren
         stack = new Stack()
         stack.start(config)
+        String[] replyData = new String()
 
         //------------------------------------------------
 
@@ -156,21 +157,34 @@ Das Objekt ${->name} wurde angefragt!
 
                             case "daten":
                                 // hier langen HTTP-body erzeugen um lang anhaltende Übertragung zu erreichen
-                                data = "Blablablubberblubberfaselblablablubberblubberfaselblablablubberblubberfaselblablablubberblubberfasel"
+                                data = "abcdefghi1abcdefghi2abcdefghi3abcdefghi4abcdefghi5abcdefghi6abcdefghi7abcdefghi8abcdefghi9"
 
                                 dataLength = data.bytes.size()
                                 reply = reply1 + data // dabei wird dataLength in reply1 eingetragen
+                                replyData = data.split("(?<=\\G.{10})")
+                                for(int i = 0; i < replyData.length; i++)
+                                    Utils.writeLog("Server", "test", "replyData[" + i + "] = " + replyData[i], 11)
                                 break
                         }
 
                         Utils.writeLog("Server", "server", "sendet: ${new String(apdu)}", 11)
 
                         // Antwort senden
-                        stack.tcpSend([connId: connId, sdu: reply])
+
+                        switch(name) {
+                            case "index.html":
+                                stack.tcpSend([connId: connId, sdu: reply])
+
+                            case "daten":
+                                for(int i = 0; i <= replyData.length; i++) {
+                                    stack.tcpSend([connId: connId, sdu: replyData[i]])
+                                    Utils.writeLog("Server", "server", "sendet als paket: " + replyData[1], 11)
+                                }
+                        }
                     }
                 } // while
-
-            } } // while
+            }
+        } // while
     }
 }
 
