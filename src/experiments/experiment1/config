@@ -1,7 +1,7 @@
 Version = "2.3.2"
 
 // Hier die Umgebung auswählen
-environment = "LOCAL"
+environment = "HOME"
 
 // Anzeige der Meldungen von "Utils.writeLog"
 // Meldungen mit den eingetragenen Debug-Leveln werden angezeigt
@@ -411,9 +411,9 @@ environments {
                 virtual: false,
                 lpName: "lp1",
                 // deviceName: Gerätename des Betriebssystems, hier: Mac OS X, Ethernet-Adapter
-                deviceName: "en4",
-                macAddr: "40:6c:8f:11:9e:38",
-                ipAddr: "141.20.33.23",
+                deviceName: "eth0",
+                macAddr: "00:0c:29:0c:57:3f",
+                ipAddr: "192.168.81.128",
                 // Dieser Filter fuer Jpcap ist so zu setzen, das nur die erwarteten Frames empfangen werden
                 // Die Filtersyntax entspricht der des Kommandos "tcpdump"
                 recvFilter: "portrange 5000-5200 or arp" // Jpcap empfängt nur Pakete, die durch diesen Ausdruck gefiltert werden
@@ -423,7 +423,7 @@ environments {
             // Initiale Routing-Tabelle
             // [["Ziel-IP-Adresse", "Prefix", "Router-IP-Adresse", "Anschluss"], ...]
             routingTable = [
-                    ["0.0.0.0", "0.0.0.0", routerIpAddr, "lp1"]
+                    ["0.0.0.0", "0.0.0.0", "192.168.81.2", "lp1"]
                 ]
 
             // Map<IP-Adresse, MAC-Adresse>
