@@ -275,7 +275,7 @@ class Utils {
         // Ist "-D stand.alone" in der Kommandozeile enthalten?
         if (System.getProperty("stand.alone"))
             // Ja
-            path = new File("home/gabriel/KS/KS-GMNS/src/experiments/experiment1/config").text // Konfigurationsdatei lesen
+            path = new File("/home/gabriel/KS/KS-GMNS/src/experiments/experiment1/config").text // Konfigurationsdatei lesen
         else
             // Nein
             path = new File("src/experiments/${test}/config").text // Konfigurationsdatei lesen
