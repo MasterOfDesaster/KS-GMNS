@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-package experiments.experiment1.hosts.client2
+package experiments.experiment1.hosts.client3
 
 import common.utils.Utils
 import experiments.experiment1.stack.Stack
@@ -118,11 +118,11 @@ Host: www.sesam-strasse.com
         // ------------------------------------------------------------
 
         // IPv4-Adresse und Portnummer des HTTP-Dienstes
-        serverIpAddr = ""
+        serverIpAddr = config.serverIpAddr
         serverPort = config.serverPort
-        nameServerIP = config.nameServerIpAddr
-        nameServerPort = config.nameServerPort
-        serverName = config.serverName
+//        nameServerIP = config.nameServerIpAddr
+//        nameServerPort = config.nameServerPort
+//        serverName = config.serverName
 
         // Netzwerkstack initialisieren
         stack = new Stack()
@@ -135,16 +135,16 @@ Host: www.sesam-strasse.com
         // ------------------------------------------------------------
 
         //Nameserver anfragen
-        Utils.writeLog("Client", "client", "fragt Nameserver an: ${serverIpAddr}", 1)
-        stack.udpSend(dstIpAddr: nameServerIP, dstPort: nameServerPort,
-                srcPort: ownPort, sdu: serverName)
+//        Utils.writeLog("Client", "client", "fragt Nameserver an: ${serverIpAddr}", 1)
+//        stack.udpSend(dstIpAddr: nameServerIP, dstPort: nameServerPort,
+//                srcPort: ownPort, sdu: serverName)
 
         // Auf Empfang warten
-        String d1, d2
+//        String d1, d2
         // dummies
-        (d1, d2, serverIpAddr) = stack.udpReceive()
+//        (d1, d2, serverIpAddr) = stack.udpReceive()
 
-        Utils.writeLog("Client", "client", "empfängt: $serverIpAddr", 1)
+//       Utils.writeLog("Client", "client", "empfängt: $serverIpAddr", 1)
 
         // Eine TCP-Verbindung öffnen
         connId = stack.tcpOpen(dstIpAddr: serverIpAddr, dstPort: serverPort)
@@ -171,7 +171,7 @@ Host: www.sesam-strasse.com
                 // Es wurden längere Zeit keine Daten empfangen oder die Datenlänge ist 0
                 // Die Verbindung wird geschlossen
                 if (!tidu.sdu)
-                    // Nein, abbrechen
+                // Nein, abbrechen
                     break
 
                 // A-PDU uebernehmen
