@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="961e57af-ce56-45fb-b0d5-2c8a7552031a" name="Default" comment="TCP Layer Update">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" />
+    <list default="true" id="961e57af-ce56-45fb-b0d5-2c8a7552031a" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/common/utils/Utils.groovy" afterPath="$PROJECT_DIR$/src/common/utils/Utils.groovy" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/experiments/experiment1/config" afterPath="$PROJECT_DIR$/src/experiments/experiment1/config" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="KS_Praktikum.iws" />
@@ -73,8 +71,8 @@
       <file leaf-file-name="start2.sh" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/hosts/client3/start2.sh">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="315">
-              <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+            <state vertical-scroll-proportion="-7.2" vertical-offset="0" max-vertical-offset="315">
+              <caret line="12" column="50" selection-start-line="12" selection-start-column="50" selection-end-line="12" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -83,8 +81,8 @@
       <file leaf-file-name="Utils.groovy" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/common/utils/Utils.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.52969694" vertical-offset="3733" max-vertical-offset="4635">
-              <caret line="280" column="28" selection-start-line="280" selection-start-column="28" selection-end-line="280" selection-end-column="28" />
+            <state vertical-scroll-proportion="0.094827585" vertical-offset="3733" max-vertical-offset="4635">
+              <caret line="256" column="29" selection-start-line="256" selection-start-column="29" selection-end-line="256" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -93,7 +91,7 @@
       <file leaf-file-name="TcpLayer.groovy" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/stack/layer/TcpLayer.groovy">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="12061" max-vertical-offset="12780">
+            <state vertical-scroll-proportion="0.0" vertical-offset="11968" max-vertical-offset="12780">
               <caret line="816" column="8" selection-start-line="816" selection-start-column="8" selection-end-line="816" selection-end-column="8" />
               <folding>
                 <element signature="e#45#81#0" expanded="true" />
@@ -131,8 +129,8 @@
         <option value="$PROJECT_DIR$/src/experiments/experiment1/config" />
         <option value="$PROJECT_DIR$/src/experiments/experiment1/hosts/client3/client.groovy" />
         <option value="$PROJECT_DIR$/src/experiments/experiment1/hosts/client3/Client.groovy" />
-        <option value="$PROJECT_DIR$/src/experiments/experiment1/hosts/client3/start2.sh" />
         <option value="$PROJECT_DIR$/src/common/utils/Utils.groovy" />
+        <option value="$PROJECT_DIR$/src/experiments/experiment1/hosts/client3/start2.sh" />
       </list>
     </option>
   </component>
@@ -910,7 +908,13 @@
       <option name="project" value="LOCAL" />
       <updated>1423679177695</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="externe Versuche Vorbereitung">
+      <created>1423700168707</created>
+      <option name="number" value="00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1423700168707</updated>
+    </task>
+    <option name="localTasksCounter" value="49" />
     <servers />
   </component>
   <component name="TodoView" selected-index="0">
@@ -947,6 +951,7 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32511738" sideWeight="0.50042623" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32840237" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32914287" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32924962" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.2494043" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32962668" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
@@ -957,7 +962,6 @@
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32596043" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.39969373" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32914287" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24980783" sideWeight="0.5" order="1" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.42488262" sideWeight="0.49957374" order="5" side_tool="false" content_ui="tabs" />
@@ -1004,7 +1008,6 @@
     <option name="myTodoPanelSettings">
       <TodoPanelSettings />
     </option>
-    <MESSAGE value="Schritt 3 fast vollständig, Client verbindet sich dann aber nicht mehr mit Server danach" />
     <MESSAGE value="removed while, Schritt 3 funktioniert nun vollständig" />
     <MESSAGE value="Schritt 4, Problem: Mac Adresse wird sowohl bei src als auch bei dst vom Client genommen" />
     <MESSAGE value="Schritt 4 Update" />
@@ -1029,7 +1032,8 @@
     <MESSAGE value="TODO's für Schritt 7" />
     <MESSAGE value="TCP vorläufiges Update" />
     <MESSAGE value="TCP Layer Update" />
-    <option name="LAST_COMMIT_MESSAGE" value="TCP Layer Update" />
+    <MESSAGE value="externe Versuche Vorbereitung" />
+    <option name="LAST_COMMIT_MESSAGE" value="externe Versuche Vorbereitung" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1360,16 +1364,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/stack/layer/TcpLayer.groovy">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="12061" max-vertical-offset="12780">
-          <caret line="816" column="8" selection-start-line="816" selection-start-column="8" selection-end-line="816" selection-end-column="8" />
-          <folding>
-            <element signature="e#45#81#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/hosts/server2/Server.groovy">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="2092" max-vertical-offset="2715">
@@ -1394,6 +1388,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/stack/layer/TcpLayer.groovy">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="12061" max-vertical-offset="12780">
+          <caret line="816" column="8" selection-start-line="816" selection-start-column="8" selection-end-line="816" selection-end-column="8" />
+          <folding>
+            <element signature="e#45#81#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/hosts/client3/Client.groovy">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="1710" max-vertical-offset="3540">
@@ -1404,16 +1408,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/experiments/experiment1/hosts/client3/start2.sh">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="225" max-vertical-offset="315">
-          <caret line="15" column="0" selection-start-line="15" selection-start-column="0" selection-end-line="15" selection-end-column="0" />
+        <state vertical-scroll-proportion="-7.2" vertical-offset="0" max-vertical-offset="315">
+          <caret line="12" column="50" selection-start-line="12" selection-start-column="50" selection-end-line="12" selection-end-column="50" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/common/utils/Utils.groovy">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.52969694" vertical-offset="3733" max-vertical-offset="4635">
-          <caret line="280" column="28" selection-start-line="280" selection-start-column="28" selection-end-line="280" selection-end-column="28" />
+        <state vertical-scroll-proportion="0.094827585" vertical-offset="3733" max-vertical-offset="4635">
+          <caret line="256" column="29" selection-start-line="256" selection-start-column="29" selection-end-line="256" selection-end-column="29" />
           <folding />
         </state>
       </provider>
